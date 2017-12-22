@@ -266,6 +266,7 @@ class ShortPixelWeb
     }
 
     function renderOptimizeNow($optData) {
+        var_dump($optData);
         $folder = $optData['folder'];
         $exclude = array();
         $folderPath = $this->normalizePath($this->basePath . $folder);
