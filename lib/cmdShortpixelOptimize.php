@@ -183,8 +183,8 @@ try {
             }
             //if no files were processed in this pass, the folder is done
             if ($crtImageCount == 0) {
-                echo $result;
                 $folderOptimized = ($item->Status->Code == 2);
+                echo $folderOptimized;
                 break;
             }
             //check the lock file
