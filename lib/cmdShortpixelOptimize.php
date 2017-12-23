@@ -131,7 +131,7 @@ try {
                 $imageCount += $crtImageCount;
                 $total = $info->total;
                 echo "all: ".$total."\r\n";
-                echo "imageCount: ".$$imageCount."\r\n";
+                echo "imageCount: ".$imageCount."\r\n";
                 echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->failed)) {
                 $crtImageCount += count($result->failed);
