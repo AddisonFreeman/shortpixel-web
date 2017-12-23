@@ -4,5 +4,8 @@ namespace ShortPixel;
 
 abstract class OptimizedItemsProducer 
 {
-	abstract protected function aprint($filePath);
+	public function aprint($filePath) {
+		return $filePath;
+	}
+	
 }
