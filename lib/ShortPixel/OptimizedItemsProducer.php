@@ -7,7 +7,7 @@ class OptimizedItemsProducer
  
     private $folderPath;
 
-    function __construct(String $folderPath)
+    function __construct(string $folderPath)
     {
         $this->folderPath = $folderPath;
     }
