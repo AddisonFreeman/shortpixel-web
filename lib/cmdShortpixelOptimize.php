@@ -129,21 +129,35 @@ try {
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
                 $imageCount += $crtImageCount;
+                
+                echo "all: ".$info->total."\r\n";
+                echo "imageCount: ".$imageCount."\r\n";
+                echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->failed)) {
                 $crtImageCount += count($result->failed);
                 $failedImageCount += count($result->failed);
+
+                echo "all: ".$info->total."\r\n";
+                echo "failedCount: ".$failedImageCount."\r\n";
+                echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->same)) {
                 $crtImageCount += count($result->same);
                 $sameImageCount += count($result->same);
+
+                echo "all: ".$info->total."\r\n";
+                echo "failedCount: ".$failedImageCount."\r\n";
+                echo "crtImageCount: ".$crtImageCount."\r\n";                
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
+
+                echo "all: ".$info->total."\r\n";
+                echo "crtImageCount: ".$crtImageCount."\r\n";                
             }
             
 
-            echo "all: ".$info->total."\r\n";
-            echo "remaining: ".$info->total - $imageCount."\r\n";
-            echo "crtImageCount: ".$crtImageCount."\r\n";
-            
+            $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile($item->SavedFile);
+            $queue->print();
+
             if ($verbose) {
                 echo("PASS $tries : " . count($result->succeeded) . " succeeded, " . count($result->pending) . " pending, " . count($result->same) . " don't need optimization, " . count($result->failed) . " failed\n");
                 foreach ($result->succeeded as $item) {
