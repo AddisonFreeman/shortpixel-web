@@ -130,9 +130,9 @@ try {
             $crtImageCount = 0;
 
             echo "all: ".$info->total;
-            echo " remaining ".$info->total-$imageCount;
+            echo " remaining ".$info->total - $imageCount;
             echo " crtImageCount ".$crtImageCount."\r\n";
-            
+
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
                 $imageCount += $crtImageCount;
