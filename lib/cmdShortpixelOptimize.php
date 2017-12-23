@@ -155,7 +155,7 @@ try {
             }
             
             // foreach ($result->succeeded as $item) {
-                $queue = new OptimizedItemsProducerToFile();
+                $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
                 // echo $queue->print();             
             // }
 

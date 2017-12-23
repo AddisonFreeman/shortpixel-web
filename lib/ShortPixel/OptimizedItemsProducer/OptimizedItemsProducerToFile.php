@@ -1,6 +1,6 @@
 <?php
 
-namespace ShortPixel;
+namespace ShortPixel\OptimizedItemsProducer;
 
 use \ShortPixel\OptimizedItemsProducer;
 
