@@ -131,7 +131,7 @@ try {
                 $imageCount += $crtImageCount;
                 
                 echo "all: ".$info->total."\r\n";
-                echo "imageCount: ".$imageCount."\r\n";
+                echo "remainingCount: ".$info->total - $imageCount."\r\n";
                 echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->failed)) {
                 $crtImageCount += count($result->failed);
@@ -155,7 +155,7 @@ try {
             }
             
             foreach ($result->succeeded as $item) {
-                $queue = new \ShortPixel\OptimizedItemsProducer("testString");
+                $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile("testString");
                 // $queue->print();             
             }
 
