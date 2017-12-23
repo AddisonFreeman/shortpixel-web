@@ -49,22 +49,29 @@ class TextPersister implements Persister {
         return false;
     }
 
-    function info($path, $recurse = true, $fileList = false, $exclude = array()) {
+    function info($path, $recurse = true, $fileList = false, $exclude = array(), $persistPath = false) {
+        if($persistPath === false) {
+            $persistPath = $path;
+        }
         if(is_dir($path)) {
             try {
-                $toClose = $this->openMetaFileIfNeeded($path);
+                $toClose = $this->openMetaFileIfNeeded($persistPath);
+                $fp = $this->getMetaFile($persistPath);
+                $dataArr = $this->readMetaFile($fp);
             } catch(ClientException $e) {
-                return (object)array('status' => 'error', 'message' => $e->getMessage(), 'code' => $e->getCode());
+                if(is_dir($persistPath) && file_exists($persistPath . '/' . ShortPixel::opt("persist_name"))) {
+                    return (object)array('status' => 'error', 'message' => $e->getMessage(), 'code' => $e->getCode());
+                }
+                $dataArr = array(); //there's no problem if the metadata file is missing and cannot be created, for the info call
             }
-            $fp = $this->getMetaFile($path);
 
             $info = (object)array('status' => 'pending', 'total' => 0, 'succeeded' => 0, 'pending' => 0, 'same' => 0, 'failed' => 0, 'todo' => null);
             $files = scandir($path);
-            $dataArr = $this->readMetaFile($fp);
             $ignore = array_merge(array('.','..','ShortPixelBackups'), $exclude);
 
             foreach($files as $file) {
                 $filePath = $path . '/' . $file;
+                $targetFilePath = $persistPath . '/' . $file;
                 if (in_array($file, $ignore)
                     || (!ShortPixel::isProcessable($file) && !is_dir($filePath))
                     || isset($dataArr[$file]) && $dataArr[$file]->status == 'deleted'
@@ -73,13 +80,14 @@ class TextPersister implements Persister {
                 }
                 if (is_dir($filePath)) {
                     if(!$recurse) continue;
-                    $subInfo = $this->info($filePath);
+                    $subInfo = $this->info($filePath, $recurse, $fileList, $exclude, $targetFilePath);
                     if($subInfo->status == 'error') {
                         return $subInfo;
                     }
                     $info->total += $subInfo->total;
                     $info->succeeded += $subInfo->succeeded;
                     $info->pending += $subInfo->pending;
+                    $info->same += $subInfo->same;
                     $info->failed += $subInfo->failed;
                 }
                 else {
@@ -87,15 +95,19 @@ class TextPersister implements Persister {
                     if(!isset($dataArr[$file]) || $dataArr[$file]->status == 'pending') {
                         $info->pending++;
                     }
-                    elseif(($dataArr[$file]->status == 'success' && filesize($filePath) != $dataArr[$file]->optimizedSize)
+                    elseif(($dataArr[$file]->status == 'success' && filesize($targetFilePath) != $dataArr[$file]->optimizedSize)
                         || ($dataArr[$file]->status == 'skip' &&  $dataArr[$file]->retries <= ShortPixel::MAX_RETRIES)) {
                         //file changed since last optimized, mark it as pending
                         $dataArr[$file]->status = 'pending';
                         $this->updateMeta($dataArr[$file], $fp);
                         $info->pending++;
                     }
-                    elseif($dataArr[$file]->status == 'success' || $dataArr[$file]->status == 'skip') {
-                        $info->succeeded++;
+                    elseif($dataArr[$file]->status == 'success') {
+                        if($dataArr[$file]->percent > 0) {
+                            $info->succeeded++;
+                        } else {
+                            $info->same++;
+                        }
                     }
                     elseif($dataArr[$file]->status == 'skip'){
                         $info->failed++;
@@ -105,18 +117,26 @@ class TextPersister implements Persister {
             }
 
             if($toClose) {
-                $this->closeMetaFile($path);
+                $this->closeMetaFile($persistPath);
             }
 
             if($info->pending == 0) {
                 $info->status = 'success';
             }
-            $info->todo = $this->getTodo($path, 1, $exclude);
+            $info->todo = $this->getTodo($path, 1, $exclude, $persistPath);
         }
         else {
-            $toClose = $this->openMetaFileIfNeeded(dirname($path));
+            $persistFolder = dirname($persistPath);
+            $meta = $toClose = false;
+            try {
+                $toClose = $this->openMetaFileIfNeeded($persistFolder);
+                $meta = $this->findMeta($persistPath);
+            } catch(ClientException $e) {
+                if(is_dir($persistFolder) && file_exists($persistFolder . '/' . ShortPixel::opt("persist_name"))) {
+                    return (object)array('status' => 'error', 'message' => $e->getMessage(), 'code' => $e->getCode());
+                }
+            }
 
-            $meta = $this->findMeta($path);
             if(!$meta) {
                 $info = array('status' => 'pending');
             } else {
@@ -147,6 +167,7 @@ class TextPersister implements Persister {
         $pendingURLs = array();
         $ignore = array_values(array_merge($exclude, array('.','..','ShortPixelBackups')));
         $remain = $count;
+        $filesWaiting = 0;
         foreach($files as $file) {
             $filePath = $path . '/' . $file;
             $targetPath = $persistPath . '/' . $file;
@@ -164,6 +185,7 @@ class TextPersister implements Persister {
                 //over 3 retries wait a minute for each, over 5 retries 2 min. for each, over 10 retries 5 min for each, over 10 retries, 10 min. for each.
                 $delta = max(0, $retries - 2) * 60 + max(0, $retries - 5) * 60 + max(0, $retries - 10) * 180 + max(0, $retries - 20) * 450;
                 if($dataArr[$file]->changeDate > time() - $delta) {
+                    $filesWaiting++;
                     continue;
                 }
             }
@@ -176,7 +198,7 @@ class TextPersister implements Persister {
                 if(count($resultsSubfolder->files)) {
                     if($toClose) { $this->closeMetaFile($persistPath); }
                     return $resultsSubfolder;
-                }  elseif($dataArr[$file]->status != 'success') {//otherwise ignore the folder but mark it as succeeded;
+                }  elseif($dataArr[$file]->status != 'success' && !$resultsSubfolder->filesWaiting) {//otherwise ignore the folder but mark it as succeeded;
                     $dataArr[$file]->status = 'success';
                     $this->updateMeta($dataArr[$file], $fp);
                 }
@@ -232,7 +254,7 @@ class TextPersister implements Persister {
             }
         }
 */
-        return (object)array('files' => $results, 'filesPending' => $pendingURLs);
+        return (object)array('files' => $results, 'filesPending' => $pendingURLs, 'filesWaiting' => $filesWaiting);
     }
 
     function getNextTodo($path, $count)
