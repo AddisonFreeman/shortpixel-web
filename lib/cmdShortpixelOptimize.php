@@ -125,7 +125,7 @@ try {
             }
             $tries++;
             
-            echo 'all: '.$info->total.'; remaining '$info->total-$imageCount.'; crtImageCount '.$crtImageCount."\r\n";
+            echo "all: ".$info->total."; remaining ".$info->total-$imageCount."; crtImageCount ".$crtImageCount."\r\n";
             
             $crtImageCount = 0;
             if (count($result->succeeded) > 0) {
