@@ -6,7 +6,7 @@ use \ShortPixel\OptimizedItemsProducer;
 
 class OptimizedItemsProducerToMemcached extends OptimizedItemsProducer
 {
-	function print() {
+	public function print() {
 		return "to Memcached printed";
 	}
 }

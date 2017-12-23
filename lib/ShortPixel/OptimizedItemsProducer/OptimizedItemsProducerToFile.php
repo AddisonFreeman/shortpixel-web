@@ -6,7 +6,7 @@ use \ShortPixel\OptimizedItemsProducer;
 
 class OptimizedItemsProducerToFile extends OptimizedItemsProducer
 {
-	function print() {
+	public function print() {
 		return "toFile printed";
 	}
 	
