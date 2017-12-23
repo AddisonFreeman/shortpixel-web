@@ -4,8 +4,15 @@ namespace ShortPixel;
 
 abstract class OptimizedItemsProducer 
 {
-	public function aprint($filePath) {
-		return $filePath;
+	private $result;
+
+    function __construct($result)
+    {
+        $this->result = $result;
+    }
+
+	public function aprint() {
+		return gettype($result);
 	}
 	
 }
