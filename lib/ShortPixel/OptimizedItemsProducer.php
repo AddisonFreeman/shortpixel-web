@@ -13,6 +13,8 @@ abstract class OptimizedItemsProducer
     }
 
 	public function aprint() {
+		echo count($this->result->succeeded)."\r\n";
+		echo $this->total."\r\n";
 		return count($this->result->succeeded) - $this->total;
 	}
 	
