@@ -154,10 +154,10 @@ try {
                 echo "crtImageCount: ".$crtImageCount."\r\n";                
             }
             
-            // foreach ($result->succeeded as $item) {
+            foreach ($result->succeeded as $item) {
                 $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
-                echo $queue->aprint();             
-            // }
+                echo $queue->aprint($item->SavedFile);             
+            }
 
 
             if ($verbose) {

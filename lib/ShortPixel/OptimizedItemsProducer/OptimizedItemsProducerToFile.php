@@ -6,8 +6,8 @@ use \ShortPixel\OptimizedItemsProducer;
 
 class OptimizedItemsProducerToFile extends OptimizedItemsProducer
 {
-	public function aprint() {
-		return "toFile printed";
+	public function aprint($filePath) {
+		return $filePath;
 	}
 	
 }
