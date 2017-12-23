@@ -155,7 +155,7 @@ try {
             }
             
 
-            $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile($item->SavedFile);
+            $queue = new \ShortPixel\OptimizedItemsProducer($item->SavedFile);
             // $queue->print();
 
             if ($verbose) {
