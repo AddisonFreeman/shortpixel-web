@@ -124,7 +124,9 @@ try {
                 }
             }
             $tries++;
-
+            
+            echo 'all: '.$info->total.'; remaining '.$result->pending;
+            
             $crtImageCount = 0;
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
@@ -138,7 +140,7 @@ try {
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
             }
-            echo 'imageCount: '.$imageCount.'; crtImageCount '.$crtImageCount;
+            
             if ($verbose) {
                 echo("PASS $tries : " . count($result->succeeded) . " succeeded, " . count($result->pending) . " pending, " . count($result->same) . " don't need optimization, " . count($result->failed) . " failed\n");
                 foreach ($result->succeeded as $item) {
