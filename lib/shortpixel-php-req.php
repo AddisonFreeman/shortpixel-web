@@ -18,9 +18,10 @@ use ShortPixel\persist\PNGReader;
 use ShortPixel\Result;
 use ShortPixel;
 */
+
+require_once("ShortPixel/OptimizedItemsProducer.php");
 require_once("ShortPixel/OptimizedItemsProducer/OptimizedItemsProducerToFile.php");
 require_once("ShortPixel/OptimizedItemsProducer/OptimizedItemsProducerToMemcached.php");
-require_once("ShortPixel/OptimizedItemsProducer.php");
 require_once("ShortPixel/Settings.php");
 require_once("ShortPixel/Lock.php");
 require_once("ShortPixel/Persister.php");
