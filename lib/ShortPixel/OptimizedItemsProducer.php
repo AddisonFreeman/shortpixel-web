@@ -12,7 +12,7 @@ abstract class OptimizedItemsProducer
     }
 
 	public function aprint() {
-		return gettype($result);
+		return gettype($this->result);
 	}
 	
 }
