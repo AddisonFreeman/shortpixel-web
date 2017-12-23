@@ -4,8 +4,8 @@ function __autoload($class_name) {
     require_once("./$class_name.php");
 }
 use ShortPixel\OptimizedItemsProducer;
-use ShortPixel\OptimizedItemsProducer\OptimizedItmesProducerToFile.php;
-use ShortPixel\OptimizedItemsProducer\OptimizedItmesProducerToMemcached.php;
+use ShortPixel\OptimizedItemsProducer\OptimizedItmesProducerToFile;
+use ShortPixel\OptimizedItemsProducer\OptimizedItmesProducerToMemcached;
 use ShortPixel\Persister;
 use ShortPixel\Commander;
 use ShortPixel\Client;
@@ -18,6 +18,7 @@ use ShortPixel\persist\PNGReader;
 use ShortPixel\Result;
 use ShortPixel;
 */
+use ShortPixel\OptimizedItemsProducer\OptimizedItmesProducerToFile;
 
 require_once("ShortPixel/OptimizedItemsProducer.php");
 require_once("ShortPixel/OptimizedItemsProducer/OptimizedItemsProducerToFile.php");
