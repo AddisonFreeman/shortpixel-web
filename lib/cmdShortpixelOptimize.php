@@ -129,7 +129,7 @@ try {
             
             $crtImageCount = 0;
 
-            echo "all: ".$info->total,"\r\n";
+            echo "all: ".$info->total."\r\n";
             echo "remaining: ".$info->total - $imageCount."\r\n";
             echo "crtImageCount: ".$crtImageCount."\r\n";
 
