@@ -124,38 +124,38 @@ try {
                 }
             }
             $tries++;
-            
+            $imageCount = 0;
             $crtImageCount = 0;
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
                 $imageCount += $crtImageCount;
                 $total = $info->total;
-                echo "all: ".$total."\r\n";
-                echo "imageCount: ".$imageCount."\r\n";
-                echo "crtImageCount: ".$crtImageCount."\r\n";
+                // echo "all: ".$total."\r\n";
+                // echo "imageCount: ".$imageCount."\r\n";
+                // echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->failed)) {
                 $crtImageCount += count($result->failed);
                 $failedImageCount += count($result->failed);
 
-                echo "all: ".$info->total."\r\n";
-                echo "failedCount: ".$failedImageCount."\r\n";
-                echo "crtImageCount: ".$crtImageCount."\r\n";
+                // echo "all: ".$info->total."\r\n";
+                // echo "failedCount: ".$failedImageCount."\r\n";
+                // echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->same)) {
                 $crtImageCount += count($result->same);
                 $sameImageCount += count($result->same);
 
-                echo "all: ".$info->total."\r\n";
-                echo "failedCount: ".$failedImageCount."\r\n";
-                echo "crtImageCount: ".$crtImageCount."\r\n";                
+                // echo "all: ".$info->total."\r\n";
+                // echo "failedCount: ".$failedImageCount."\r\n";
+                // echo "crtImageCount: ".$crtImageCount."\r\n";                
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
 
-                echo "all: ".$info->total."\r\n";
-                echo "crtImageCount: ".$crtImageCount."\r\n";                
+                // echo "all: ".$info->total."\r\n";
+                // echo "crtImageCount: ".$crtImageCount."\r\n";                
             }
             
             // foreach ($result->succeeded as $item) {
-                $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile($result, $info->total);
+                $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile($info->total, $imageCount);
                 echo $queue->aprint();             
                 // echo $queue->statusReport($info->total);
             // }
