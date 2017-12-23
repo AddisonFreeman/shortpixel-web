@@ -124,7 +124,7 @@ try {
                 }
             }
             $tries++;
-            $imageCount = 0;
+            // $imageCount = 0;
             $crtImageCount = 0;
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
