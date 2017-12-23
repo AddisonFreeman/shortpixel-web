@@ -3,7 +3,9 @@
 function __autoload($class_name) {
     require_once("./$class_name.php");
 }
-
+use ShortPixel\OptimizedItemsProducer;
+use ShortPixel\OptimizedItemsProducer\OptimizedItmesProducerToFile.php;
+use ShortPixel\OptimizedItemsProducer\OptimizedItmesProducerToMemcached.php;
 use ShortPixel\Persister;
 use ShortPixel\Commander;
 use ShortPixel\Client;

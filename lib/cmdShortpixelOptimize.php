@@ -156,7 +156,7 @@ try {
             
 
             $queue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile($item->SavedFile);
-            $queue->print();
+            // $queue->print();
 
             if ($verbose) {
                 echo("PASS $tries : " . count($result->succeeded) . " succeeded, " . count($result->pending) . " pending, " . count($result->same) . " don't need optimization, " . count($result->failed) . " failed\n");
