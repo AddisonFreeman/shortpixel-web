@@ -2,7 +2,7 @@
 
 namespace ShortPixel;
 
-abstract class OptimizedItemsProducer 
+class OptimizedItemsProducer 
 {
  
     private $folderPath;
