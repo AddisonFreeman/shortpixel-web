@@ -112,6 +112,7 @@ try {
             try {
                 if ($webPath) {
                     $result = \ShortPixel\fromWebFolder($folder, $webPath, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
+                    echo $result;
                 } else {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
