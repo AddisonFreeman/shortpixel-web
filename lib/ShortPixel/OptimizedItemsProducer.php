@@ -4,5 +4,5 @@ namespace ShortPixel;
 
 abstract class OptimizedItemsProducer 
 {
-	abstract protected function print();
+	abstract protected function aprint();
 }
