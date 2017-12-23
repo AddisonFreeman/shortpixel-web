@@ -112,11 +112,9 @@ try {
             try {
                 if ($webPath) {
                     $result = \ShortPixel\fromWebFolder($folder, $webPath, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
-                    echo $result;
                 } else {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
-                    echo $speed .'   '.$result;
                 }
             } catch (\ShortPixel\ClientException $ex) {
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
@@ -140,6 +138,7 @@ try {
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
             }
+            echo 'imageCount: '.$imageCount.'; crtImageCount '.$crtImageCount;
             if ($verbose) {
                 echo("PASS $tries : " . count($result->succeeded) . " succeeded, " . count($result->pending) . " pending, " . count($result->same) . " don't need optimization, " . count($result->failed) . " failed\n");
                 foreach ($result->succeeded as $item) {
@@ -156,7 +155,8 @@ try {
                 }
                 echo("\n");
             } else {
-                echo(str_pad("", $crtImageCount, "#"));
+                echo 'imageCount: '.$imageCount.'; crtImageCount '.$crtImageCount;
+                // echo(str_pad("", $crtImageCount, "#"));
             }
             //if no files were processed in this pass, the folder is done
             if ($crtImageCount == 0) {
