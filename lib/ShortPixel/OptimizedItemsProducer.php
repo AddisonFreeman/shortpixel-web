@@ -5,14 +5,15 @@ namespace ShortPixel;
 abstract class OptimizedItemsProducer 
 {
 	private $result;
-
-    function __construct($result)
+	private $total;
+    function __construct($result, $total)
     {
         $this->result = $result;
+        $this->total = $total;
     }
 
 	public function aprint() {
-		return var_dump($this->result);
+		return count($this->result->succeeded) - $this->total;
 	}
 	
 }
