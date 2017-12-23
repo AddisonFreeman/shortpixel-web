@@ -125,14 +125,7 @@ try {
             }
             $tries++;
             
-            
-            
             $crtImageCount = 0;
-
-            echo "all: ".$info->total."\r\n";
-            echo "remaining: ".$info->total - $imageCount."\r\n";
-            echo "crtImageCount: ".$crtImageCount."\r\n";
-
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
                 $imageCount += $crtImageCount;
@@ -145,6 +138,11 @@ try {
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
             }
+            
+
+            echo "all: ".$info->total."\r\n";
+            echo "remaining: ".$info->total - $imageCount."\r\n";
+            echo "crtImageCount: ".$crtImageCount."\r\n";
             
             if ($verbose) {
                 echo("PASS $tries : " . count($result->succeeded) . " succeeded, " . count($result->pending) . " pending, " . count($result->same) . " don't need optimization, " . count($result->failed) . " failed\n");
