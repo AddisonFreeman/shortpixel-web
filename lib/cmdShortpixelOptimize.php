@@ -125,7 +125,7 @@ try {
             }
             $tries++;
             
-            echo 'all: '.$info->total.'; remaining '.$result->pending;
+            echo 'all: '.$info->total.'; remaining '.count($result->pending);
             
             $crtImageCount = 0;
             if (count($result->succeeded) > 0) {
