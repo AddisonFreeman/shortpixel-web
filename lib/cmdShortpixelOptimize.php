@@ -125,7 +125,7 @@ try {
             }
             $tries++;
             
-            echo 'all: '.$info->total.'; remaining '.count($result->pending);
+            echo 'all: '.$info->total.'; remaining '$info->total-$imageCount.'; crtImageCount '.$crtImageCount."\r\n";
             
             $crtImageCount = 0;
             if (count($result->succeeded) > 0) {
@@ -157,7 +157,6 @@ try {
                 }
                 echo("\n");
             } else {
-                echo 'imageCount: '.$imageCount.'; crtImageCount '.$crtImageCount;
                 // echo(str_pad("", $crtImageCount, "#"));
             }
             //if no files were processed in this pass, the folder is done
