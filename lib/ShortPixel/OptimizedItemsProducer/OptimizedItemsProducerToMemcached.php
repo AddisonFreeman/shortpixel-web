@@ -7,7 +7,7 @@ class OptimizedItemsProducerToMemcached extends \ShortPixel\OptimizedItemsProduc
 	private $mem;
 	
 	function init() {
-		$this->$mem = new Memcache;
+		$this->$mem = new \Memcache;
 		$this->mem->addServer('localhost', 11211);
 	}
 
