@@ -165,7 +165,8 @@ try {
                 // $fileQueue->set_total($info->total);
                 // echo $fileQueue->aprint()." files remaining\r\n";
                 // $fileQueue->printToFile(); //TODO: fix permissions error
-                echo $memQueue->aprint()." files remaining - memQueue\r\n";     
+                echo $memQueue->aprint()." files remaining - memQueue\r\n";
+                $memQueue->update();     
                 echo $memQueue->mem->get('remaining');
                 echo "\t\n";        
             // }
