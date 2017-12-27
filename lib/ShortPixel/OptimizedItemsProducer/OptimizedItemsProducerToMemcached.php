@@ -10,8 +10,18 @@ class OptimizedItemsProducerToMemcached extends \ShortPixel\OptimizedItemsProduc
 		// $this->$mem = new \Memcache;
 		$memcache = new \Memcache;
 		$memcache->addServer('localhost', 11211);
-		$memcache->set('remaining', 22);
+		$result = $this->get_result();
+		$total = $this->get_total();
+		$remaining = $total - $result;
+		$memcache->set('remaining', $remaining);
 		$this->mem = $memcache;
+	}
+
+	function update() {
+		$result = $this->get_result();
+		$total = $this->get_total();
+		$remaining = $total - $result;
+		$this->mem->set('remaining', $remaining);
 	}
 
 }

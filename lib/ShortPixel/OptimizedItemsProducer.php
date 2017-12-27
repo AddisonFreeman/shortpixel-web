@@ -4,8 +4,8 @@ namespace ShortPixel;
 
 abstract class OptimizedItemsProducer 
 {
-	private $result;
-	private $total;
+	public $result;
+	public $total;
     function __construct()
     {
         // $this->total = $total;
