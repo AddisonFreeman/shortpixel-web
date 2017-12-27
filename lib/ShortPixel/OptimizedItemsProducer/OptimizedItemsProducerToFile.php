@@ -1,5 +1,6 @@
 <?php
 
+namespace ShortPixel\OptimizedItemsProducer;
 
 class OptimizedItemsProducerToFile extends \ShortPixel\OptimizedItemsProducer
 {

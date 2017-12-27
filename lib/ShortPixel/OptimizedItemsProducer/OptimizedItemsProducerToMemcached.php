@@ -1,5 +1,7 @@
 <?php
 
+namespace ShortPixel\OptimizedItemsProducer;
+
 class OptimizedItemsProducerToMemcached extends \ShortPixel\OptimizedItemsProducer
 {
 	private $mem;
