@@ -20,6 +20,14 @@ abstract class OptimizedItemsProducer
     	$this->total = $total;
     }
 
+    function get_result() {
+    	return $this->result;
+    }
+
+    function get_total() {
+    	return $this->total;
+    }
+
 	public function aprint() {
 		return $this->total - $this->result;
 	}
