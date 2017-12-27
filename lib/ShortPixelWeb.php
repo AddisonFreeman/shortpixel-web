@@ -325,6 +325,10 @@ class ShortPixelWeb
             $timeLimit = 60;
         }
 
+        $memcache = new \Memcache;
+        $memcache->addServer('localhost', 11211);
+        file_put_contents(".q-log",$memcache->get('remainder'));
+
         $folderPath = $this->basePath . $folder; // get that damn separator straight on Windows too :))
         $this->setupWrapper($folderPath);
         $slice = $slice ? $slice : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL;
