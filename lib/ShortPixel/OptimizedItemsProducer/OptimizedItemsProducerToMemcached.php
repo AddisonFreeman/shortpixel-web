@@ -9,8 +9,8 @@ class OptimizedItemsProducerToMemcached extends OptimizedItemsProducer
 	private $mem;
 	
 	function init() {
-		// $this->$mem = new Memcache;
-		// $this->mem->addServer("127.0.0.1", 11211);
+		$this->$mem = new Memcache;
+		$this->mem->addServer('localhost', 11211);
 	}
 
 }

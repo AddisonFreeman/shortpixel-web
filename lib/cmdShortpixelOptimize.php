@@ -108,9 +108,9 @@ try {
         echo(splog("Congratulations, the folder is optimized."));
     }
     else {
-        // $memQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToMemcached();
-        // $memQueue->init();
-        $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
+        $memQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToMemcached();
+        $memQueue->init();
+        // $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
         while ($tries < 1000) {
             try {
                 if ($webPath) {
@@ -159,14 +159,13 @@ try {
             
             // foreach ($result->succeeded as $item) {
                 
-                // $memQueue->set_result($imageCount);
-                // $memQueue->set_total($info->total);
-                $fileQueue->set_result($imageCount);
-                $fileQueue->set_total($info->total);
-                echo $fileQueue->aprint()." files remaining\r\n";
-                $fileQueue->printToFile();
-                // echo $memQueue->aprint()." m\r\n";             
-                // echo $queue->statusReport($info->total);
+                $memQueue->set_result($imageCount);
+                $memQueue->set_total($info->total);
+                // $fileQueue->set_result($imageCount);
+                // $fileQueue->set_total($info->total);
+                // echo $fileQueue->aprint()." files remaining\r\n";
+                // $fileQueue->printToFile(); //TODO: fix permissions error
+                echo $memQueue->aprint()." files remaining - memQueue\r\n";             
             // }
 
 
