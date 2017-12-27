@@ -9,7 +9,7 @@ abstract class OptimizedItemsProducer
     function __construct()
     {
         // $this->total = $total;
-        // $this->count = $count;
+        // $this->count = $result;
     }
 
     function set_result($result) {
@@ -21,7 +21,6 @@ abstract class OptimizedItemsProducer
     }
 
 	public function aprint() {
-		return $this->total - $this->count;
+		return $this->total - $this->result;
 	}
-	
 }
