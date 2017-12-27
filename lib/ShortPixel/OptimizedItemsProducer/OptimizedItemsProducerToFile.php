@@ -1,10 +1,7 @@
 <?php
 
-namespace ShortPixel\OptimizedItemsProducer;
 
-use \ShortPixel\OptimizedItemsProducer;
-
-class OptimizedItemsProducerToFile extends OptimizedItemsProducer
+class OptimizedItemsProducerToFile extends \ShortPixel\OptimizedItemsProducer
 {
 	public function printToFile() {
 		file_put_contents(".shortpixel-q", $this->aprint());	
