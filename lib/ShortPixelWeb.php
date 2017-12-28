@@ -345,9 +345,11 @@ class ShortPixelWeb
             if(\ShortPixel\opt('base_url')) {
                 $cmd = \ShortPixel\fromWebFolder($folderPath, \ShortPixel\opt('base_url'), $exclude);
             } else {
+                $arr = new Array;
+                $arr['total'] = 23;
                 $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
             }
-            die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
+            die(json_encode(array_push($cmd->wait($timeLimit)->toFiles($folderPath), $arr)));
         }
         catch(\Exception $e) {
             die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
