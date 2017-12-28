@@ -256,7 +256,11 @@ class ShortPixelWeb
     }
 
     function renderOptimizeNow($optData) {
-        var_dump($optData);
+        // var_dump($optData);
+        $memcache = new \Memcache;
+        $memcache->addServer('localhost', 11211);
+        echo $memcache->get('remainder');
+
         $folder = $optData['folder'];
         $exclude = array();
         $folderPath = $this->normalizePath($this->basePath . $folder);
@@ -324,10 +328,6 @@ class ShortPixelWeb
         } else {
             $timeLimit = 60;
         }
-
-        $memcache = new \Memcache;
-        $memcache->addServer('localhost', 11211);
-        file_put_contents(".q-log",$memcache->get('remainder'));
 
         $folderPath = $this->basePath . $folder; // get that damn separator straight on Windows too :))
         $this->setupWrapper($folderPath);
