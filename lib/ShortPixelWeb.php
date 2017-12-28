@@ -321,11 +321,7 @@ class ShortPixelWeb
         $this->xtpl->out('main');
     }
 
-    function optimizeAction($folder, $slice) {
-        $memcache = new \Memcache;
-        $memcache->addServer('localhost', 11211);
-        echo $memcache->get('remainder');
-        
+    function optimizeAction($folder, $slice) {        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
@@ -347,11 +343,10 @@ class ShortPixelWeb
             } else {
                 $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
             }
-            $arr = (object) array(
-                'total' => 23
-            );
+            $memcache = new \Memcache;
+            $memcache->addServer('localhost', 11211);
             $res = $cmd->wait($timeLimit)->toFiles($folderPath);
-            $res->total = 23;
+            $res->total = $memcache->get('remainder');
             die(json_encode($res));
         }
         catch(\Exception $e) {
