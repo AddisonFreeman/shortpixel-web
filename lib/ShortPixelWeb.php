@@ -346,7 +346,7 @@ class ShortPixelWeb
             $memcache = new \Memcache;
             $memcache->addServer('localhost', 11211);
             $res = $cmd->wait($timeLimit)->toFiles($folderPath);
-            $res->total = $memcache->get('remainder');
+            $res->total = $memcache->get('remaining');
             die(json_encode($res));
         }
         catch(\Exception $e) {
