@@ -350,7 +350,8 @@ class ShortPixelWeb
             $arr = (object) array(
                 'total' => 23
             );
-            die(json_encode(array_merge($cmd->wait($timeLimit)->toFiles($folderPath), $arr)));
+            var_dump($cmd->wait($timeLimit)->toFiles($folderPath));
+            // die(json_encode(array_merge($cmd->wait($timeLimit)->toFiles($folderPath), $arr)));
         }
         catch(\Exception $e) {
             die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
