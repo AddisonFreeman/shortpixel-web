@@ -322,6 +322,10 @@ class ShortPixelWeb
     }
 
     function optimizeAction($folder, $slice) {
+        $memcache = new \Memcache;
+        $memcache->addServer('localhost', 11211);
+        echo $memcache->get('remainder');
+        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
