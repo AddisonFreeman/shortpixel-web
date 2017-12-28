@@ -309,6 +309,7 @@ var ShortPixel = function() {
                 errCount == Math.max(0, errCount - 1); //decrease the errors at each success
                 try {
                     var data = JSON.parse(response);
+                    console.log(data);
                 } catch (e) {
                     console.log("Unrecognized response, retrying in 10 sec. (" + response + ")");
                     setTimeout(function(){optimize(folder, spSlice);}, 10000);
