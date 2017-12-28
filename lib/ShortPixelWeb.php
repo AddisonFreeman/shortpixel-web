@@ -351,7 +351,7 @@ class ShortPixelWeb
                 'total' => 23
             );
             $res = $cmd->wait($timeLimit)->toFiles($folderPath);
-            $res->'total' = 23;
+            $res->total = 23;
             die(json_encode($res));
         }
         catch(\Exception $e) {
