@@ -362,6 +362,8 @@ class ShortPixelWeb
 
             $res = $cmd->wait($timeLimit)->toFiles($folderPath);
             $res->total = $memcache->get('remaining');
+            $res->folder = $memcache->get('sp-q_folder');
+            
             die(json_encode($res));
         }
         catch(\Exception $e) {
