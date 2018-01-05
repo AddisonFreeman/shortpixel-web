@@ -353,24 +353,24 @@ class ShortPixelWeb
             // read queue file
             // try to read memcache value about current folder (and do string match) else read queue file for given folder   
 
-            if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
-                $fromQueue = true;
-                // $source = new Source();
-                $values_from_file;
+            // if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
+            //     $fromQueue = true;
+            //     // $source = new Source();
+            //     $values_from_file;
 
-            }
+            // }
 
             // $res = $cmd->wait($timeLimit)->toFiles($folderPath);
             // $res->total = $memcache->get('remaining');
             // $res->folder = $memcache->get('sp-q_folder');
             
-            $testRes = (object) array(
-                    'status' => array('code' => 2, 'message' => 'success'),
-                    'succeeded' => array(),
-                    'pending' => array(),
-                    'failed' => array(),
-                    'same' => array());
-            die(json_encode($testRes));
+            // $testRes = (object) array(
+            //         'status' => array('code' => 2, 'message' => 'success'),
+            //         'succeeded' => array(),
+            //         'pending' => array(),
+            //         'failed' => array(),
+            //         'same' => array());
+            // die(json_encode($testRes));
         }
         catch(\Exception $e) {
             die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
