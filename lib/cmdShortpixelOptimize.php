@@ -110,14 +110,18 @@ try {
     else {
         $memQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToMemcached();
         $memQueue->init();
+        $memQueue->mem->set('sp-q_folder', $folder);
         // $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
         while ($tries < 1000) {
             try {
                 if ($webPath) {
                     $result = \ShortPixel\fromWebFolder($folder, $webPath, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
+                    $memQueue->mem->set('sp-q_result',$result);
                 } else {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
+                    $memQueue->mem->set('sp-q_speed',$speed);
+                    $memQueue->mem->set('sp-q_result',$result);
                 }
             } catch (\ShortPixel\ClientException $ex) {
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
@@ -127,49 +131,31 @@ try {
                 }
             }
             $tries++;
-            // $imageCount = 0;
+
             $crtImageCount = 0;
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
                 $imageCount += $crtImageCount;
                 $total = $info->total;
-                // echo "all: ".$total."\r\n";
-                // echo "imageCount: ".$imageCount."\r\n";
-                // echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->failed)) {
                 $crtImageCount += count($result->failed);
                 $failedImageCount += count($result->failed);
-
-                // echo "all: ".$info->total."\r\n";
-                // echo "failedCount: ".$failedImageCount."\r\n";
-                // echo "crtImageCount: ".$crtImageCount."\r\n";
             } elseif (count($result->same)) {
                 $crtImageCount += count($result->same);
                 $sameImageCount += count($result->same);
-
-                // echo "all: ".$info->total."\r\n";
-                // echo "failedCount: ".$failedImageCount."\r\n";
-                // echo "crtImageCount: ".$crtImageCount."\r\n";                
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
-
-                // echo "all: ".$info->total."\r\n";
-                // echo "crtImageCount: ".$crtImageCount."\r\n";                
             }
+                        
+            $memQueue->set_result($imageCount)->set_total($info->total);
+            // $fileQueue->set_result($imageCount);
+            // $fileQueue->set_total($info->total);
+            // $fileQueue->printToFile(); //TODO: fix permissions error
             
-            // foreach ($result->succeeded as $item) {
-                
-                $memQueue->set_result($imageCount);
-                $memQueue->set_total($info->total);
-                // $fileQueue->set_result($imageCount);
-                // $fileQueue->set_total($info->total);
-                // echo $fileQueue->aprint()." files remaining\r\n";
-                // $fileQueue->printToFile(); //TODO: fix permissions error
-                // echo $memQueue->aprint()." files remaining - memQueue\r\n";
-                $memQueue->update();     
-                echo $memQueue->mem->get('remaining');
-                echo "\t\n";        
-            // }
+            $memQueue->update();     
+            echo $memQueue->mem->get('remaining');
+            echo "\t\n";        
+    
 
 
             if ($verbose) {
@@ -198,6 +184,9 @@ try {
             //check & refresh the lock file
             $splock->lock();
         }
+        $memQueue->mem->set('processing_folder', FALSE);
+        $memQueue->mem->set('sp-q_result',FALSE);
+        $memQueue->mem->set('sp-q_speed',FALSE);
 
         echo(splog("This pass: $imageCount images optimized, $sameImageCount don't need optimization, $failedImageCount failed to optimize." . ($folderOptimized ? " Congratulations, the folder is optimized.":"")));
         if ($crtImageCount > 0) echo(splog("Images still pending, please relaunch the script to continue."));

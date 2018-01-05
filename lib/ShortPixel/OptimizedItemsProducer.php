@@ -14,10 +14,12 @@ abstract class OptimizedItemsProducer
 
     function set_result($result) {
     	$this->result = $result;
+    	return $this;
     }
 
     function set_total($total) {
     	$this->total = $total;
+    	return $this;
     }
 
     function get_result() {
