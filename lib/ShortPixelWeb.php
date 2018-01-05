@@ -368,9 +368,7 @@ class ShortPixelWeb
             //     $values_from_file;
 
             // }
-
-            $res = $cmd->wait($timeLimit)->toFiles($folderPath);
-            die(json_encode($res));
+            die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
         }
         catch(\Exception $e) {
             die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
