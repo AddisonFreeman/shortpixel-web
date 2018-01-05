@@ -346,7 +346,7 @@ class ShortPixelWeb
 
             $memcache = new \Memcache;
             $memcache->addServer('localhost', 11211);
-            if($memcache->get('sp-q_folder')) {
+            if(false && $memcache->get('sp-q_folder')) {
                 $fold = $memcache->get('sp-q_folder');
                 $testRes = (object) array(
                         'status' => array('code' => 1, 'message' => 'success'),
