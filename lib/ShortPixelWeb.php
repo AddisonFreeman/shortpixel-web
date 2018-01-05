@@ -344,20 +344,20 @@ class ShortPixelWeb
                 $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
             }
 
-            $memcache = new \Memcache;
-            $memcache->addServer('localhost', 11211);
-            if(false && $memcache->get('sp-q_folder')) {
-                $fold = $memcache->get('sp-q_folder');
-                $testRes = (object) array(
-                        'status' => array('code' => 1, 'message' => 'success'),
-                        'succeeded' => array('memcachefolder' => $fold),
-                        'pending' => array(),
-                        'failed' => array(),
-                        'same' => array());
-                die(json_encode($testRes));
-                // die(json_encode($memcache->get('sp-q_result')));    
-                // die(json_encode());
-            }                
+            // $memcache = new \Memcache;
+            // $memcache->addServer('localhost', 11211);
+            // if(false && $memcache->get('sp-q_folder')) {
+            //     $fold = $memcache->get('sp-q_folder');
+            //     $testRes = (object) array(
+            //             'status' => array('code' => 1, 'message' => 'success'),
+            //             'succeeded' => array('memcachefolder' => $fold),
+            //             'pending' => array(),
+            //             'failed' => array(),
+            //             'same' => array());
+            //     die(json_encode($testRes));
+            //     // die(json_encode($memcache->get('sp-q_result')));    
+            //     // die(json_encode());
+            // }                
             
             // read queue file
             // try to read memcache value about current folder (and do string match) else read queue file for given folder   
