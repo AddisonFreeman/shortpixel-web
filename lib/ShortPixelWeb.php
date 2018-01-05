@@ -382,7 +382,7 @@ class ShortPixelWeb
             // die(json_encode($testRes));
         }
         catch(\Exception $e) {
-            // die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
+            die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
         }
 
     }
