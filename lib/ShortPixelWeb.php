@@ -345,7 +345,7 @@ class ShortPixelWeb
             }
 
             $memcache = new \Memcache;
-            $memcache->addServer('localhost', 11211
+            $memcache->addServer('localhost', 11211);
             if($memcache->get('sp-q_folder')) {
                 die(json_encode($memcache->get('sp-q_result')));    
             }                
