@@ -184,7 +184,7 @@ try {
             //check & refresh the lock file
             $splock->lock();
         }
-        $memQueue->mem->set('processing_folder', FALSE);
+        $memQueue->mem->set('sp-q_folder', FALSE);
         $memQueue->mem->set('sp-q_result',FALSE);
         $memQueue->mem->set('sp-q_speed',FALSE);
 
