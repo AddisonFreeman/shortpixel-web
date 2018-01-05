@@ -256,11 +256,6 @@ class ShortPixelWeb
     }
 
     function renderOptimizeNow($optData) {
-        // var_dump($optData);
-        $memcache = new \Memcache;
-        $memcache->addServer('localhost', 11211);
-        echo $memcache->get('remainder');
-
         $folder = $optData['folder'];
         $exclude = array();
         $folderPath = $this->normalizePath($this->basePath . $folder);
@@ -344,30 +339,6 @@ class ShortPixelWeb
                 $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
             }
 
-            // $memcache = new \Memcache;
-            // $memcache->addServer('localhost', 11211);
-            // if(false && $memcache->get('sp-q_folder')) {
-            //     $fold = $memcache->get('sp-q_folder');
-            //     $testRes = (object) array(
-            //             'status' => array('code' => 1, 'message' => 'success'),
-            //             'succeeded' => array('memcachefolder' => $fold),
-            //             'pending' => array(),
-            //             'failed' => array(),
-            //             'same' => array());
-            //     die(json_encode($testRes));
-            //     // die(json_encode($memcache->get('sp-q_result')));    
-            //     // die(json_encode());
-            // }                
-            
-            // read queue file
-            // try to read memcache value about current folder (and do string match) else read queue file for given folder   
-
-            // if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
-            //     $fromQueue = true;
-            //     // $source = new Source();
-            //     $values_from_file;
-
-            // }
             die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
         }
         catch(\Exception $e) {
