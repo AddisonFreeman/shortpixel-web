@@ -369,17 +369,8 @@ class ShortPixelWeb
 
             // }
 
-            // $res = $cmd->wait($timeLimit)->toFiles($folderPath);
-            // $res->total = $memcache->get('remaining');
-            // $res->folder = $memcache->get('sp-q_folder');
-            
-            // $testRes = (object) array(
-            //         'status' => array('code' => 2, 'message' => 'success'),
-            //         'succeeded' => array(),
-            //         'pending' => array(),
-            //         'failed' => array(),
-            //         'same' => array());
-            // die(json_encode($testRes));
+            $res = $cmd->wait($timeLimit)->toFiles($folderPath);
+            die(json_encode($res));
         }
         catch(\Exception $e) {
             die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
