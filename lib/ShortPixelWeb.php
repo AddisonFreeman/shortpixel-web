@@ -347,7 +347,16 @@ class ShortPixelWeb
             $memcache = new \Memcache;
             $memcache->addServer('localhost', 11211);
             if($memcache->get('sp-q_folder')) {
-                die(json_encode($memcache->get('sp-q_result')));    
+                $fold = $memcache->get('sp-q_folder');
+                $testRes = (object) array(
+                        'status' => array('code' => 2, 'message' => 'success'),
+                        'succeeded' => array('memcachefolder' => $fold),
+                        'pending' => array(),
+                        'failed' => array(),
+                        'same' => array());
+                die(json_encode($testRes));
+                // die(json_encode($memcache->get('sp-q_result')));    
+                // die(json_encode());
             }                
             
             // read queue file
@@ -373,7 +382,7 @@ class ShortPixelWeb
             // die(json_encode($testRes));
         }
         catch(\Exception $e) {
-            die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
+            // die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
         }
 
     }
