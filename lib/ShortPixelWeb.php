@@ -349,7 +349,7 @@ class ShortPixelWeb
             if($memcache->get('sp-q_folder')) {
                 $fold = $memcache->get('sp-q_folder');
                 $testRes = (object) array(
-                        'status' => array('code' => 2, 'message' => 'success'),
+                        'status' => array('code' => 1, 'message' => 'success'),
                         'succeeded' => array('memcachefolder' => $fold),
                         'pending' => array(),
                         'failed' => array(),
