@@ -343,8 +343,23 @@ class ShortPixelWeb
             } else {
                 $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
             }
+
             $memcache = new \Memcache;
-            $memcache->addServer('localhost', 11211);
+            $memcache->addServer('localhost', 11211
+            if($memcache->get('sp-q_folder')) {
+                die(json_encode($memcache->get('sp-q_result')));    
+            }                
+            
+            // read queue file
+            // try to read memcache value about current folder (and do string match) else read queue file for given folder   
+
+            if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
+                $fromQueue = true;
+                // $source = new Source();
+                $values_from_file;
+
+            }
+
             $res = $cmd->wait($timeLimit)->toFiles($folderPath);
             $res->total = $memcache->get('remaining');
             die(json_encode($res));
