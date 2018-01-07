@@ -347,20 +347,12 @@ class ShortPixelWeb
                 $memcache = new \Memcache;
                 $memcache->addServer('localhost', 11211);
                 $memcacheFolder = $memcache->get('sp-q_folder');
-                die(json_encode((object) array(
-                        'memcachefolder' => $folderPath)));
-//  "/usr/local/important/web/joomla.shortpixel.com/wrapper-test/imagescron1"
-                // if($memcacheFolder) {
-                //     $testRes = (object) array(
-                //             'status' => array('code' => 1, 'message' => 'success'),
-                //             'succeeded' => array('memcachefolder' => $fold),
-                //             'pending' => array(),
-                //             'failed' => array(),
-                //             'same' => array());
-                //     die(json_encode($testRes));
-                //     // die(json_encode($memcache->get('sp-q_result')));    
-                //     // die(json_encode());
-                // }                
+
+                if($memcacheFolder == $folderPath) {
+                    $memcacheResult = $memcache->get('sp-q_result');
+                    die(json_encode((object) array(
+                        'memcacheresult' => $memcacheResult)));
+                }                
                 
                 // read queue file
                 // try to read memcache value about current folder (and do string match) else read queue file for given folder   
