@@ -350,8 +350,7 @@ class ShortPixelWeb
 
                 if($memcacheFolder == $folderPath) {
                     $memcacheResult = $memcache->get('sp-q_result');
-                    die(json_encode((object) array(
-                        'memcacheresult' => $memcacheResult)));
+                    die(json_encode($memcacheResult));
                 }                
                 
                 // read queue file
