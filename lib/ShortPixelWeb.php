@@ -348,8 +348,8 @@ class ShortPixelWeb
                 $memcache->addServer('localhost', 11211);
                 $memcacheFolder = $memcache->get('sp-q_folder');
                 die(json_encode((object) array(
-                        'memcachefolder' => $memcacheFolder)));
-
+                        'memcachefolder' => $folderPath)));
+//  "/usr/local/important/web/joomla.shortpixel.com/wrapper-test/imagescron1"
                 // if($memcacheFolder) {
                 //     $testRes = (object) array(
                 //             'status' => array('code' => 1, 'message' => 'success'),
