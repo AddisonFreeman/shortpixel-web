@@ -111,7 +111,7 @@ try {
         $memQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToMemcached();
         $memQueue->init();
         $memQueue->mem->set('sp-q_folder', $folder);
-        // $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
+        $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
         while ($tries < 1000) {
             try {
                 if ($webPath) {
@@ -120,8 +120,9 @@ try {
                 } else {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
-                    $memQueue->mem->set('sp-q_speed',$speed);
+                    // $memQueue->mem->set('sp-q_speed',$speed);
                     $memQueue->mem->set('sp-q_result',$result);
+                    $fileQueue->printToFile($result);
                 }
             } catch (\ShortPixel\ClientException $ex) {
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
@@ -147,7 +148,7 @@ try {
                 $crtImageCount += count($result->pending);
             }
                         
-            $memQueue->set_result($imageCount)->set_total($info->total);
+            // $memQueue->set_result($imageCount)->set_total($info->total);
             // $fileQueue->set_result($imageCount);
             // $fileQueue->set_total($info->total);
             // $fileQueue->printToFile(); //TODO: fix permissions error
