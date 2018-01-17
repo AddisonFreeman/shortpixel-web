@@ -330,6 +330,29 @@ class ShortPixelWeb
         $folderPath = $this->basePath . $folder; // get that damn separator straight on Windows too :))
         $this->setupWrapper($folderPath);
         $slice = $slice ? $slice : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL;
+        
+        try {
+            $processId = uniqid();
+            $splock = new \ShortPixel\Lock($processId, $folderPath);
+            $splock->lock();               
+        } catch(ClientException $e) {
+            // can't lock, folder being optimized   
+            if(extension_loaded(memcache)) {
+                $memcache = new \Memcache;
+                $memcache->addServer('localhost', 11211);
+                $memcacheFolder = $memcache->get('sp-q_folder');
+
+                if($memcacheFolder == $folderPath) {
+                    $memcacheResult = $memcache->get('sp-q_result');
+                    die(json_encode($memcacheResult));
+                }
+            } else {
+                // read from queue file in $folderPath
+                if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
+                    // $fc read contents
+                }
+            }    
+        }
 
         try {
             $exclude = array();
@@ -341,33 +364,10 @@ class ShortPixelWeb
             } else {
                 $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
             }
-
-            // if lock found, currently being optimized
-            if(file_exists($folderPath."/.sp-lock")) {
-                $memcache = new \Memcache;
-                $memcache->addServer('localhost', 11211);
-                $memcacheFolder = $memcache->get('sp-q_folder');
-
-                if($memcacheFolder == $folderPath) {
-                    $memcacheResult = $memcache->get('sp-q_result');
-                    die(json_encode($memcacheResult));
-                }                
-                
-                // read queue file
-                // try to read memcache value about current folder (and do string match) else read queue file for given folder   
-
-                // if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
-                //     $fromQueue = true;
-                //     // $source = new Source();
-                // }
-
-            }
             die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
-        }
-        catch(\Exception $e) {
+        } catch(\Exception $e) {
             die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
         }
-
     }
 
     function displayMessages($xtplPath, $messages) {
