@@ -16,6 +16,11 @@ class Lock {
         $this->targetFolder = $targetFolder;
         $this->clearLock = $clearLock;
     }
+   
+    function splog($msg) {
+        global $processId;
+        return "\n$processId@" . date("Y-m-d H:i:s") . "> $msg\n";
+    }
 
     function lock() {
     //check if the folder is not locked by another ShortPixel process
@@ -49,10 +54,5 @@ class Lock {
 
     function getLockMsg($lock, $folder) {
         return splog("The folder is locked by a different ShortPixel process ({$lock[0]}). Exiting. \n\n\033[31mIf you're SURE no other ShortPixel process is running, you can remove the lock with \n\n >\033[34m rm " . $folder . '/' . self::FOLDER_LOCK_FILE . " \033[0m \n");
-    }
-    
-    function splog($msg) {
-        global $processId;
-        return "\n$processId@" . date("Y-m-d H:i:s") . "> $msg\n";
     }
 }
