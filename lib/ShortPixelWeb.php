@@ -335,7 +335,7 @@ class ShortPixelWeb
             $processId = uniqid();
             $splock = new \ShortPixel\Lock($processId, $folderPath);
             $splock->lock();               
-        } catch(ClientException $e) {
+        } catch(\Exception $e) {
             // can't lock, folder being optimized   
             if(extension_loaded(memcache)) {
                 $memcache = new \Memcache;
@@ -348,9 +348,9 @@ class ShortPixelWeb
                 }
             } else {
                 // read from queue file in $folderPath
-                if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
+                // if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
                     // $fc read contents
-                }
+                // }
             }    
         }
 
