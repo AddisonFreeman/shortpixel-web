@@ -337,7 +337,7 @@ class ShortPixelWeb
             $splock->lock();               
         } catch(\Exception $e) {
             // can't lock, folder being optimized   
-            if(extension_loaded(memcache)) {
+            if(extension_loaded('memcache')) {
                 $memcache = new \Memcache;
                 $memcache->addServer('localhost', 11211);
                 $memcacheFolder = $memcache->get('sp-q_folder');
