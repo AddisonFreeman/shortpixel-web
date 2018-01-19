@@ -37,7 +37,7 @@ class ShortPixelWeb
     function handleRequest() {
         try {
             $processId = uniqid();
-            $splock = new \ShortPixel\Lock($processId, $folderPath);
+            $splock = null;
         } catch (\Exception $e) {
             echo "can't instantiate lock object with uniqid() processId";
         }
@@ -49,17 +49,25 @@ class ShortPixelWeb
         elseif(isset($_POST['action'])) {
             switch($_POST['action']) {
                 case 'shortpixel_browse_content':
-                    $this->renderBrowseFolderFragment(isset($_POST['dir']) ? $_POST['dir'] : null,
-                        isset($_POST['multiSelect']) && $_POST['multiSelect'] == 'true',
-                        isset($_POST['onlyFolders']) && $_POST['onlyFolders'] == 'true',
-                        isset($_POST['onlyFiles']) && $_POST['onlyFiles'] == 'true',
-                        isset($_POST['extended']) && $_POST['extended'] == 'true');
+                    if($splock != null) {
+                        try {
+                            $splock->unlock();
+                        } catch (\Exception $e) {
+                            // cou;dn't unlock folder on optimize completion
+                        }
+                        $this->renderBrowseFolderFragment(isset($_POST['dir']) ? $_POST['dir'] : null,
+                            isset($_POST['multiSelect']) && $_POST['multiSelect'] == 'true',
+                            isset($_POST['onlyFolders']) && $_POST['onlyFolders'] == 'true',
+                            isset($_POST['onlyFiles']) && $_POST['onlyFiles'] == 'true',
+                            isset($_POST['extended']) && $_POST['extended'] == 'true');    
+                    }
                     break;
                 case 'shortpixel_folder_options':
+                    $splock = new \ShortPixel\Lock($processId, $_POST['folder']);
                     $this->renderFolderOptionsData($_POST['folder']);
                     break;
                 case 'shortpixel_optimize' :
-                    $this->optimizeAction($_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
+                    $this->optimizeAction(&$splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
             }
         }
         elseif(isset($_GET['folder'])) {
@@ -332,7 +340,7 @@ class ShortPixelWeb
         $this->xtpl->out('main');
     }
 
-    function optimizeAction($folder, $slice) {        
+    function optimizeAction($splock, $folder, $slice) {        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
