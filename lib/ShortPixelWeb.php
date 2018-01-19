@@ -35,6 +35,14 @@ class ShortPixelWeb
     }
 
     function handleRequest() {
+        try {
+            $processId = uniqid();
+            $splock = new \ShortPixel\Lock($processId, $folderPath);
+        } catch (\Exception $e) {
+            echo "can't instantiate lock object with uniqid() processId";
+        }
+            
+
         if(isset($_POST['API_KEY'])) {
             $this->renderStartPage($this->settingsHandler->persistApiKeyAndSettings($_POST));
         }
@@ -125,6 +133,11 @@ class ShortPixelWeb
     }
 
     function renderBrowseFolderFragment($folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
+        try{
+            $splock->unlock();
+        } catch (\Exception $e) {
+            echo "can't unlock() folder";
+        }
         $postDir = $this->folderFullPath($folder);
         $checkbox = $multiSelect ? "<input type='checkbox' />" : null;
 
@@ -332,8 +345,6 @@ class ShortPixelWeb
         $slice = $slice ? $slice : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL;
         
         try {
-            $processId = uniqid();
-            $splock = new \ShortPixel\Lock($processId, $folderPath);
             $splock->lock();               
         } catch(\Exception $e) {
             // can't lock, folder being optimized   
