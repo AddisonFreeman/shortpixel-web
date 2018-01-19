@@ -53,17 +53,21 @@ class ShortPixelWeb
                         try {
                             $splock->unlock();
                         } catch (\Exception $e) {
-                            // cou;dn't unlock folder on optimize completion
+                            // couldn't unlock folder on optimize completion
                         }
+                    } else {
+                        $splock = new \ShortPixel\Lock($processId, $_POST['dir']);
                     }
-                    $this->renderBrowseFolderFragment(isset($_POST['dir']) ? $_POST['dir'] : null,
+                    $this->renderBrowseFolderFragment($splock, isset($_POST['dir']) ? $_POST['dir'] : null,
                         isset($_POST['multiSelect']) && $_POST['multiSelect'] == 'true',
                         isset($_POST['onlyFolders']) && $_POST['onlyFolders'] == 'true',
                         isset($_POST['onlyFiles']) && $_POST['onlyFiles'] == 'true',
                         isset($_POST['extended']) && $_POST['extended'] == 'true');    
                     break;
                 case 'shortpixel_folder_options':
-                    $splock = new \ShortPixel\Lock($processId, $_POST['folder']);
+                    if($splock == null) {
+                        $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
+                    }
                     $this->renderFolderOptionsData($_POST['folder']);
                     break;
                 case 'shortpixel_optimize' :
@@ -140,7 +144,7 @@ class ShortPixelWeb
         return array("backupPath" => false, "backupUrl" => false);
     }
 
-    function renderBrowseFolderFragment($folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
+    function renderBrowseFolderFragment(&$splock, $folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
         try{
             $splock->unlock();
         } catch (\Exception $e) {
