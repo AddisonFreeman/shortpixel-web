@@ -4,8 +4,8 @@ namespace ShortPixel\OptimizedItemsProducer;
 
 class OptimizedItemsProducerToFile extends \ShortPixel\OptimizedItemsProducer
 {
-	public function printToFile($data) {
-		file_put_contents(".shortpixel-q", $data);	
+	public function printToFile($folder,$data) {
+		file_put_contents($folder . "/" . ".shortpixel-q", $data);	
 	}
 	
     function set_result($result) {

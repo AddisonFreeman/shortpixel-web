@@ -117,13 +117,13 @@ try {
                 if ($webPath) {
                     $result = \ShortPixel\fromWebFolder($folder, $webPath, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                     $memQueue->mem->set('sp-q_result',$result);
-                    $fileQueue->printToFile($result);
+                    $fileQueue->printToFile($folder, $result);
                 } else {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                     // $memQueue->mem->set('sp-q_speed',$speed);
                     $memQueue->mem->set('sp-q_result',$result);
-                    $fileQueue->printToFile($result);
+                    $fileQueue->printToFile($folder, $result);
                 }
             } catch (\ShortPixel\ClientException $ex) {
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
@@ -148,18 +148,7 @@ try {
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
             }
-                        
-            // $memQueue->set_result($imageCount)->set_total($info->total);
-            // $fileQueue->set_result($imageCount);
-            // $fileQueue->set_total($info->total);
-            // $fileQueue->printToFile(); //TODO: fix permissions error
             
-            $memQueue->update();     
-            echo $memQueue->mem->get('remaining');
-            echo "\t\n";        
-    
-
-
             if ($verbose) {
                 echo("PASS $tries : " . count($result->succeeded) . " succeeded, " . count($result->pending) . " pending, " . count($result->same) . " don't need optimization, " . count($result->failed) . " failed\n");
                 foreach ($result->succeeded as $item) {
@@ -188,7 +177,6 @@ try {
         }
         $memQueue->mem->set('sp-q_folder', FALSE);
         $memQueue->mem->set('sp-q_result',FALSE);
-        $memQueue->mem->set('sp-q_speed',FALSE);
 
         echo(\ShortPixel\ShortPixel::splog("This pass: $imageCount images optimized, $sameImageCount don't need optimization, $failedImageCount failed to optimize." . ($folderOptimized ? " Congratulations, the folder is optimized.":"")));
         if ($crtImageCount > 0) echo(\ShortPixel\ShortPixel::splog("Images still pending, please relaunch the script to continue."));
