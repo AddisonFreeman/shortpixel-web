@@ -35,29 +35,14 @@ class ShortPixelWeb
     }
 
     function handleRequest() {
-        try {
-            $processId = uniqid();
-            $splock = null;
-        } catch (\Exception $e) {
-            echo "can't instantiate lock object with uniqid() processId";
-        }
-            
-
         if(isset($_POST['API_KEY'])) {
             $this->renderStartPage($this->settingsHandler->persistApiKeyAndSettings($_POST));
         }
         elseif(isset($_POST['action'])) {
             switch($_POST['action']) {
                 case 'shortpixel_browse_content':
-                    if($splock != null) {
-                        try {
-                            $splock->unlock();
-                        } catch (\Exception $e) {
-                            // couldn't unlock folder on optimize completion
-                        }
-                    } else {
-                        $splock = new \ShortPixel\Lock($processId, $_POST['dir']);
-                    }
+                    $processId = uniqid();
+                    $splock = new \ShortPixel\Lock($processId, $_POST['dir']);
                     $this->renderBrowseFolderFragment($splock, isset($_POST['dir']) ? $_POST['dir'] : null,
                         isset($_POST['multiSelect']) && $_POST['multiSelect'] == 'true',
                         isset($_POST['onlyFolders']) && $_POST['onlyFolders'] == 'true',
@@ -65,12 +50,11 @@ class ShortPixelWeb
                         isset($_POST['extended']) && $_POST['extended'] == 'true');    
                     break;
                 case 'shortpixel_folder_options':
-                    if($splock == null) {
-                        $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
-                    }
                     $this->renderFolderOptionsData($_POST['folder']);
                     break;
-                case 'shortpixel_optimize' :
+                case 'shortpixel_optimize':
+                    $processId = uniqid();
+                    $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
                     $this->optimizeAction($splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
             }
         }
@@ -144,7 +128,7 @@ class ShortPixelWeb
         return array("backupPath" => false, "backupUrl" => false);
     }
 
-    function renderBrowseFolderFragment(&$splock, $folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
+    function renderBrowseFolderFragment($folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
         try{
             $splock->unlock();
         } catch (\Exception $e) {
