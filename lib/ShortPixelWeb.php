@@ -328,7 +328,7 @@ class ShortPixelWeb
         $this->xtpl->out('main');
     }
 
-    function optimizeAction(&$splock, $folder, $slice) {        
+    function optimizeAction($splock, $folder, $slice) {        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
