@@ -53,9 +53,9 @@ class ShortPixelWeb
                     $this->renderFolderOptionsData($_POST['folder']);
                     break;
                 case 'shortpixel_optimize':
-                    $processId = uniqid();
-                    $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
-                    $this->optimizeAction($splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
+                    // $processId = uniqid();
+                    // $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
+                    $this->optimizeAction($_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
             }
         }
         elseif(isset($_GET['folder'])) {
@@ -328,7 +328,7 @@ class ShortPixelWeb
         $this->xtpl->out('main');
     }
 
-    function optimizeAction($splock, $folder, $slice) {        
+    function optimizeAction($folder, $slice) {        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
@@ -340,26 +340,26 @@ class ShortPixelWeb
         $this->setupWrapper($folderPath);
         $slice = $slice ? $slice : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL;
         
-        try {
-            $splock->lock();               
-        } catch(\Exception $e) {
-            // can't lock, folder being optimized   
-            if(extension_loaded('memcache')) {
-                $memcache = new \Memcache;
-                $memcache->addServer('localhost', 11211);
-                $memcacheFolder = $memcache->get('sp-q_folder');
+        // try {
+        //     $splock->lock();               
+        // } catch(\Exception $e) {
+        //     // can't lock, folder being optimized   
+        //     if(extension_loaded('memcache')) {
+        //         $memcache = new \Memcache;
+        //         $memcache->addServer('localhost', 11211);
+        //         $memcacheFolder = $memcache->get('sp-q_folder');
 
-                if($memcacheFolder == $folderPath) {
-                    $memcacheResult = $memcache->get('sp-q_result');
-                    die(json_encode($memcacheResult));
-                }
-            } else {
-                // read from queue file in $folderPath
-                // if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
-                    // $fc read contents
-                // }
-            }    
-        }
+        //         if($memcacheFolder == $folderPath) {
+        //             $memcacheResult = $memcache->get('sp-q_result');
+        //             die(json_encode($memcacheResult));
+        //         }
+        //     } else {
+        //         // read from queue file in $folderPath
+        //         // if($fc = file_get_contents($folderPath . ".shortpixel-q") ) {
+        //             // $fc read contents
+        //         // }
+        //     }    
+        // }
 
         try {
             $exclude = array();
