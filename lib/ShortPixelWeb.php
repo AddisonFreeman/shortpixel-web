@@ -128,7 +128,7 @@ class ShortPixelWeb
         return array("backupPath" => false, "backupUrl" => false);
     }
 
-    function renderBrowseFolderFragment($folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
+    function renderBrowseFolderFragment($splock, $folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
         try{
             $splock->unlock();
         } catch (\Exception $e) {
