@@ -346,11 +346,13 @@ class ShortPixelWeb
             // echo "can't lock, folder being optimized\n";
             if(extension_loaded('memcache')) {
                 // echo "memcache loaded\n";
+                var_dump($folderPath);
                 $memcache = new \Memcache;
                 $memcache->addServer('localhost', 11211);
                 $memcacheFolder = $memcache->get('sp-q_folder');
-                echo $memcacheFolder."\n";
-                echo $folderPath."\n";
+                echo "wut?";
+                var_dump($memcacheFolder);
+                
                 if($memcacheFolder == $folderPath) {
                     echo "memcache folder match\n";
                     $memcacheResult = $memcache->get('sp-q_result');
