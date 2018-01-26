@@ -356,7 +356,7 @@ class ShortPixelWeb
                 if($memcacheFolder == $folderPath) {
                     echo "memcache folder match\n";
                     $memcacheResult = $memcache->get('sp-q_result');
-                    echo $memcacheResult;
+                    var_dump($memcacheResult);
                     die(json_encode($memcacheResult));
                 }
             } else {
