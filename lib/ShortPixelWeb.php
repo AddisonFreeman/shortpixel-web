@@ -53,7 +53,6 @@ class ShortPixelWeb
                     $this->renderFolderOptionsData($_POST['folder']);
                     break;
                 case 'shortpixel_optimize':
-                    echo 'optimize logging';
                     $processId = uniqid();
                     $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
                     $this->optimizeAction($splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
@@ -344,14 +343,17 @@ class ShortPixelWeb
         try {
             $splock->lock();               
         } catch(\Exception $e) {
-            // can't lock, folder being optimized   
+            echo "can't lock, folder being optimized\n";
             if(extension_loaded('memcache')) {
+                echo "memcache loaded\n";
                 $memcache = new \Memcache;
                 $memcache->addServer('localhost', 11211);
                 $memcacheFolder = $memcache->get('sp-q_folder');
 
                 if($memcacheFolder == $folderPath) {
+                    echo "memcache folder match\n";
                     $memcacheResult = $memcache->get('sp-q_result');
+                    echo $memcacheResult;
                     die(json_encode($memcacheResult));
                 }
             } else {
