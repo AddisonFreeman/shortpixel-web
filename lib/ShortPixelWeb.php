@@ -53,9 +53,9 @@ class ShortPixelWeb
                     $this->renderFolderOptionsData($_POST['folder']);
                     break;
                 case 'shortpixel_optimize':
-                    // $processId = uniqid();
-                    // $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
-                    $this->optimizeAction($_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
+                    $processId = uniqid();
+                    $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
+                    $this->optimizeAction($splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
             }
         }
         elseif(isset($_GET['folder'])) {
@@ -328,7 +328,7 @@ class ShortPixelWeb
         $this->xtpl->out('main');
     }
 
-    function optimizeAction($folder, $slice) {        
+    function optimizeAction($splock, $folder, $slice) {        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
