@@ -145,6 +145,13 @@ class ShortPixel {
             @file_put_contents(__DIR__ . '/splog.txt', date("Y-m-d H:i:s") . " - " . $msg . " \n\n", FILE_APPEND);
         }
     }
+
+    static public function splog($msg) {
+        global $processId;
+        return "\n$processId@" . date("Y-m-d H:i:s") . "> $msg\n";
+    }
+
+
 }
 
 ShortPixel::setOptions(array('base_path' => sys_get_temp_dir()));
