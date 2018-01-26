@@ -53,6 +53,7 @@ class ShortPixelWeb
                     $this->renderFolderOptionsData($_POST['folder']);
                     break;
                 case 'shortpixel_optimize':
+                    echo 'optimize logging';
                     $processId = uniqid();
                     $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
                     $this->optimizeAction($splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
