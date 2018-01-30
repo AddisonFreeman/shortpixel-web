@@ -126,7 +126,8 @@ try {
                 } else {
                     echo "new result\n";
                     echo $result['succeeded'];
-                    $resultArray = array_unique(json_decode(json_encode($resultArray)));
+                    echo "\n".gettype($resultArray)."\n";
+                    $resultArray = json_decode(json_encode($resultArray));
                     if(isset($resultArray)) {
                         $memQueue->mem->set('sp-q_result_history',$resultArray);    
                     }
