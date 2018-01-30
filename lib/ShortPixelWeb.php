@@ -359,7 +359,7 @@ class ShortPixelWeb
                     $memcacheResult = $memcache->get('sp-q_result');
                     $memcacheResultHistory = $memcache->get('sp-q_result_history');
                     // var_dump($memcacheResultHistory);
-                    if(in_array($memcacheResult,$memcacheResultHistory)) {
+                    if(isset($memcacheResultHistory) && in_array($memcacheResult,$memcacheResultHistory)) {
                         // already processed
                     } else {
                         die(json_encode($memcacheResult));
