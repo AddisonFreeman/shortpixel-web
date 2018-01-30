@@ -126,7 +126,9 @@ try {
                 } else {
                     echo 'new result';
                     var_dump($result);
-                    $memQueue->mem->set('sp-q_result_history',array_unique($resultArray));
+                    if(isset($resultArray)) {
+                        $memQueue->mem->set('sp-q_result_history',array_unique($resultArray));    
+                    }
                     $memQueue->mem->set('sp-q_result',$result);
                     array_push($resultArray, $result);
                 }
