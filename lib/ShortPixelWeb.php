@@ -55,7 +55,7 @@ class ShortPixelWeb
                 case 'shortpixel_optimize':
                     $processId = uniqid();
                     $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
-                    $resultHistory = new array();
+                    $resultHistory = [];
                     $this->optimizeAction($splock, $resultHistory, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
             }
         }
