@@ -55,7 +55,8 @@ class ShortPixelWeb
                 case 'shortpixel_optimize':
                     $processId = uniqid();
                     $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
-                    $this->optimizeAction($splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
+                    $resultHistory = new array();
+                    $this->optimizeAction($splock, $resultHistory, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
             }
         }
         elseif(isset($_GET['folder'])) {
@@ -328,7 +329,7 @@ class ShortPixelWeb
         $this->xtpl->out('main');
     }
 
-    function optimizeAction($splock, $folder, $slice) {        
+    function optimizeAction($splock, $resultHistory, $folder, $slice) {        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
@@ -356,8 +357,13 @@ class ShortPixelWeb
                 if($memcacheFolder == $folderPath) {
                     // echo "memcache folder match\n";
                     $memcacheResult = $memcache->get('sp-q_result');
-                    // var_dump($memcacheResult);
-                    die(json_encode($memcacheResult));
+                    $memcacheResultHistory = $memcache->get('sp-q_result_history');
+                );
+                    if(in_array($memcacheResult,$memcacheResultHistory)) {
+                        // already processed
+                    } else {
+                        die(json_encode($memcacheResult));
+                    }                    
                 }
             } else {
                 // read from queue file in $folderPath
