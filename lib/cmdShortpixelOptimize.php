@@ -125,9 +125,10 @@ try {
                     echo "in history array \n";
                 } else {
                     echo "new result\n";
-                    var_dump($result);
+                    echo $result['succeeded'];
+                    $resultArray = array_unique($resultArray);
                     if(isset($resultArray)) {
-                        $memQueue->mem->set('sp-q_result_history',array_unique($resultArray));    
+                        $memQueue->mem->set('sp-q_result_history',$resultArray);    
                     }
                     $memQueue->mem->set('sp-q_result',$result);
                     array_push($resultArray, $result);
