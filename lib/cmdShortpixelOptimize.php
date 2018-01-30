@@ -112,19 +112,19 @@ try {
         $memQueue->init();
         $memQueue->mem->set('sp-q_folder', $folder);
         $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
+        $resultArray = new array();
         while ($tries < 1000) {
             try {
                 if ($webPath) {
                     $result = \ShortPixel\fromWebFolder($folder, $webPath, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
-                    $memQueue->mem->set('sp-q_result',$result);
-                    $fileQueue->printToFile($folder, $result);
                 } else {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
-                    // $memQueue->mem->set('sp-q_speed',$speed);
-                    $memQueue->mem->set('sp-q_result',$result);
-                    $fileQueue->printToFile($folder, $result);
                 }
+                $memQueue->mem->set('sp-q_result_history',array_unique($resultArray));
+                $memQueue->mem->set('sp-q_result',$result);
+                array_push($resultArray, $restult);
+                // $fileQueue->printToFile($folder, $result);    
             } catch (\ShortPixel\ClientException $ex) {
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
                     break;
@@ -177,6 +177,7 @@ try {
         }
         $memQueue->mem->set('sp-q_folder', FALSE);
         $memQueue->mem->set('sp-q_result',FALSE);
+        $memQueue->mem->set('sp-q_result_prev',FALSE);
 
         echo(\ShortPixel\ShortPixel::splog("This pass: $imageCount images optimized, $sameImageCount don't need optimization, $failedImageCount failed to optimize." . ($folderOptimized ? " Congratulations, the folder is optimized.":"")));
         if ($crtImageCount > 0) echo(\ShortPixel\ShortPixel::splog("Images still pending, please relaunch the script to continue."));
