@@ -123,7 +123,7 @@ try {
                 }
                 $memQueue->mem->set('sp-q_result_history',array_unique($resultArray));
                 $memQueue->mem->set('sp-q_result',$result);
-                array_push($resultArray, $restult);
+                array_push($resultArray, $result);
                 // $fileQueue->printToFile($folder, $result);    
             } catch (\ShortPixel\ClientException $ex) {
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
