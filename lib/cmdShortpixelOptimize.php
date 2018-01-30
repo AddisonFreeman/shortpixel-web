@@ -122,9 +122,9 @@ try {
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                 }
                 if(in_array($result,array_unique($resultArray))) {
-
+                    echo "in history array \n";
                 } else {
-                    echo 'new result';
+                    echo "new result\n";
                     var_dump($result);
                     if(isset($resultArray)) {
                         $memQueue->mem->set('sp-q_result_history',array_unique($resultArray));    
