@@ -112,7 +112,7 @@ try {
         $memQueue->init();
         $memQueue->mem->set('sp-q_folder', $folder);
         $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
-        $resultArray = new array();
+        $resultArray = [];
         while ($tries < 1000) {
             try {
                 if ($webPath) {
