@@ -358,7 +358,7 @@ class ShortPixelWeb
                     // echo "memcache folder match\n";
                     $memcacheResult = $memcache->get('sp-q_result');
                     $memcacheResultHistory = $memcache->get('sp-q_result_history');
-                    var_dump($memcacheResultHistory);
+                    // var_dump($memcacheResultHistory);
                     if(in_array($memcacheResult,$memcacheResultHistory)) {
                         // already processed
                     } else {
