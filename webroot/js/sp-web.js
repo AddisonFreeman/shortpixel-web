@@ -296,7 +296,7 @@ var ShortPixel = function() {
             " --folder=" + ShortPixel.OS_PATH + fullPath + "'</code></p>");
     }
 
-    function optimize(folder, slice) {
+    function optimize(folder, slice, history = []) {
         $.ajax({
             type: "POST",
             url: window.location.href.split("?")[0],
@@ -310,6 +310,8 @@ var ShortPixel = function() {
                 try {
                     var data = JSON.parse(response);
                     console.log(data);
+                    history.push(data);
+                    console.log(history);
                 } catch (e) {
                     console.log("Unrecognized response, retrying in 10 sec. (" + response + ")");
                     setTimeout(function(){optimize(folder, spSlice);}, 10000);
