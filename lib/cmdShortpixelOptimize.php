@@ -112,7 +112,7 @@ try {
         $memQueue->init();
         $memQueue->mem->set('sp-q_folder', $folder);
         $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
-        $resultArray = [];
+        $tmpResult = null;
         while ($tries < 1000) {
             try {
                 if ($webPath) {
@@ -121,18 +121,13 @@ try {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                 }
-                if(in_array($result,array_unique($resultArray))) {
+                if($result == $tmpResult) {
                     echo "in history array \n";
-                } else {
+                } else { //unique, update
                     echo "new result\n";
-                    echo $result['succeeded'];
-                    echo "\n".gettype($resultArray)."\n";
-                    $resultArray = json_decode(json_encode($resultArray));
-                    if(isset($resultArray)) {
-                        $memQueue->mem->set('sp-q_result_history',$resultArray);    
-                    }
+                    var_dump($result->succeeded);
                     $memQueue->mem->set('sp-q_result',$result);
-                    array_push($resultArray, $result);
+                    $tmpResult = $result;
                 }
 
                 // $fileQueue->printToFile($folder, $result);    
@@ -142,6 +137,7 @@ try {
                 } else {
                     echo(\ShortPixel\ShortPixel::splog("ClientException: " . $ex->getMessage() . " (CODE: " . $ex->getCode() . ")"));
                 }
+                $splock->unlock();
             }
             $tries++;
 
