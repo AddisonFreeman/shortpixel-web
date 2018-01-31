@@ -169,6 +169,7 @@ try {
             if ($crtImageCount == 0) {
                 $folderOptimized = (!isset($item) || $item->Status->Code == 2);
                 var_dump($result);
+                sleep(5);
                 break;
             }
             //check & refresh the lock file
@@ -176,7 +177,6 @@ try {
         }
         $memQueue->mem->set('sp-q_folder', FALSE);
         $memQueue->mem->set('sp-q_result',FALSE);
-        $memQueue->mem->set('sp-q_result_history',FALSE);
 
         echo(\ShortPixel\ShortPixel::splog("This pass: $imageCount images optimized, $sameImageCount don't need optimization, $failedImageCount failed to optimize." . ($folderOptimized ? " Congratulations, the folder is optimized.":"")));
         if ($crtImageCount > 0) echo(\ShortPixel\ShortPixel::splog("Images still pending, please relaunch the script to continue."));
