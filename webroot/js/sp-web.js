@@ -309,7 +309,8 @@ var ShortPixel = function() {
                 errCount == Math.max(0, errCount - 1); //decrease the errors at each success
                 try {
                     var data = JSON.parse(response);
-                    console.log(data);
+                    console.log(data.succeeded);
+                    console.log(typeof data.succeeded);
                     history.push(data);
                     console.log(history);
                 } catch (e) {
