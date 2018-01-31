@@ -346,7 +346,7 @@ var ShortPixel = function() {
                         progressUpdate(percent.toFixed(1), "");                        
                     }
 
-                    if(!skip && data.succeeded.length + data.pending.length + data.same.length + data.failed.length == 0) {
+                    if(data.succeeded.length + data.pending.length + data.same.length + data.failed.length == 0) {
                         if(ShortPixel.emptyConsecutiveResponses > 3 || percent == 100.0) {
                             if(ShortPixel.sliderConsumerId !== false) {
                                 clearInterval(ShortPixel.sliderConsumerId);
