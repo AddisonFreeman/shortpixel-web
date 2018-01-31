@@ -339,11 +339,14 @@ var ShortPixel = function() {
                 if(data.status.code == 2) { //folder is fully optimized (or empty )
                     window.location.reload();
                 }
-                else if(data.status.code == 1 & !skip) {
-                    $("#doneFiles").val(parseInt($("#doneFiles").val()) + data.succeeded.length + data.failed.length + data.same.length)
-                    var percent = Math.min(100.0, 100.0 * (parseInt($("#doneFiles").val())) / (parseInt($("#totalFiles").val())));
-                    progressUpdate(percent.toFixed(1), "");
-                    if(   data.succeeded.length + data.pending.length + data.same.length + data.failed.length == 0) {
+                else if(data.status.code == 1) {
+                    if(!skip) {
+                        $("#doneFiles").val(parseInt($("#doneFiles").val()) + data.succeeded.length + data.failed.length + data.same.length)
+                        var percent = Math.min(100.0, 100.0 * (parseInt($("#doneFiles").val())) / (parseInt($("#totalFiles").val())));
+                        progressUpdate(percent.toFixed(1), "");                        
+                    }
+
+                    if(!skip && data.succeeded.length + data.pending.length + data.same.length + data.failed.length == 0) {
                         if(ShortPixel.emptyConsecutiveResponses > 3 || percent == 100.0) {
                             if(ShortPixel.sliderConsumerId !== false) {
                                 clearInterval(ShortPixel.sliderConsumerId);
@@ -357,7 +360,7 @@ var ShortPixel = function() {
                     } else {
                         ShortPixel.emptyConsecutiveResponses = 0;
                     }
-                    if(ShortPixel.sliderQueue.getLength() < 100) {
+                    if(!skip && ShortPixel.sliderQueue.getLength() < 100) {
                         for(var i = 0; i < data.succeeded.length; i++) {
                             var item = data.succeeded[i];
                             //preload the images
@@ -370,7 +373,7 @@ var ShortPixel = function() {
                             ShortPixel.sliderQueue.enqueue(item);
                         }
                     }
-                    if(ShortPixel.sliderConsumerId === false) {
+                    if(!skip && ShortPixel.sliderConsumerId === false) {
                         sliderUpdate();
                         ShortPixel.sliderConsumerId = setInterval(sliderUpdate, ShortPixel.sliderFrequencyMs);
                     }
