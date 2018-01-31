@@ -310,8 +310,13 @@ var ShortPixel = function() {
                 try {
                     var data = JSON.parse(response);
                     console.log(data.succeeded);
-                    console.log(typeof data.succeeded);
-                    history.push(data);
+
+                    
+
+                    Object.entries(data.succeeded).forEach(([key,val]) => {
+                        history.push(val.OriginalURL);    
+                    });
+                    
                     console.log(history);
                 } catch (e) {
                     console.log("Unrecognized response, retrying in 10 sec. (" + response + ")");
