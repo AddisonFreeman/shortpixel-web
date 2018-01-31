@@ -168,6 +168,8 @@ try {
             //if no files were processed in this pass, the folder is done
             if ($crtImageCount == 0) {
                 $folderOptimized = (!isset($item) || $item->Status->Code == 2);
+                echo 'folder done'
+                var_dump($result);
                 break;
             }
             //check & refresh the lock file
