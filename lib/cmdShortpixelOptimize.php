@@ -112,7 +112,6 @@ try {
         $memQueue->init();
         $memQueue->mem->set('sp-q_folder', $folder);
         $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
-        $tmpResult = null;
         while ($tries < 1000) {
             try {
                 if ($webPath) {
@@ -121,15 +120,8 @@ try {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                 }
-                if($result == $tmpResult) {
-                    echo "in history array \n";
-                } else { //unique, update
-                    echo "new result\n";
-                    var_dump($result->succeeded->SavedFile);
-                    $memQueue->mem->set('sp-q_result',$result);
-                    $tmpResult = $result;
-                }
-
+                var_dump($result->succeeded['$SavedFile']);
+                $memQueue->mem->set('sp-q_result',$result);
                 // $fileQueue->printToFile($folder, $result);    
             } catch (\ShortPixel\ClientException $ex) {
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
