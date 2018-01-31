@@ -357,13 +357,11 @@ class ShortPixelWeb
                 if($memcacheFolder == $folderPath) {
                     // echo "memcache folder match\n";
                     $memcacheResult = $memcache->get('sp-q_result');
-                    $memcacheResultHistory = $memcache->get('sp-q_result_history');
+                    // $memcacheResultHistory = $memcache->get('sp-q_result_history');
                     // var_dump($memcacheResultHistory);
-                    if(isset($memcacheResultHistory) && in_array($memcacheResult,$memcacheResultHistory)) {
-                        // already processed
-                    } else {
-                        die(json_encode($memcacheResult));
-                    }                    
+                    echo $memcacheResult->succeeded;
+                    die(json_encode($memcacheResult));
+                    
                 }
             } else {
                 // read from queue file in $folderPath
