@@ -359,7 +359,7 @@ class ShortPixelWeb
                     $memcacheResult = $memcache->get('sp-q_result');
                     // $memcacheResultHistory = $memcache->get('sp-q_result_history');
                     // var_dump($memcacheResultHistory);
-                    echo $memcacheResult->succeeded;
+                    var_dump($memcacheResult->succeeded);
                     die(json_encode($memcacheResult));
                     
                 }
