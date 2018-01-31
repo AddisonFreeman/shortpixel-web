@@ -120,7 +120,6 @@ try {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                 }
-                var_dump($result->succeeded['$SavedFile']);
                 $memQueue->mem->set('sp-q_result',$result);
                 // $fileQueue->printToFile($folder, $result);    
             } catch (\ShortPixel\ClientException $ex) {
