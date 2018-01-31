@@ -315,6 +315,7 @@ var ShortPixel = function() {
                     Object.entries(data.succeeded).forEach(([key,val]) => {
                         if(!history.includes(val.OriginalFile)) {
                             history.push(val.OriginalFile);    
+                        } else {
                             skip = true;
                         }
                     });
