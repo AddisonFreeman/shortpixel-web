@@ -125,7 +125,7 @@ try {
                     echo "in history array \n";
                 } else { //unique, update
                     echo "new result\n";
-                    var_dump($result->succeeded);
+                    var_dump($result->succeeded->$SavedFile);
                     $memQueue->mem->set('sp-q_result',$result);
                     $tmpResult = $result;
                 }
