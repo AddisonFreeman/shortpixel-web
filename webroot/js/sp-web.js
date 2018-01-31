@@ -297,6 +297,7 @@ var ShortPixel = function() {
     }
 
     function optimize(folder, slice, history = []) {
+        var skip = false;
         $.ajax({
             type: "POST",
             url: window.location.href.split("?")[0],
@@ -311,13 +312,12 @@ var ShortPixel = function() {
                     var data = JSON.parse(response);
                     console.log(data.succeeded);
 
-
-
                     Object.entries(data.succeeded).forEach(([key,val]) => {
-                        if(!history.includes(val.OriginalFile))
+                        if(!history.includes(val.OriginalFile)) {
                             history.push(val.OriginalFile);    
+                            skip = true;
+                        }
                     });
-                    
                     console.log(history);
                 } catch (e) {
                     console.log("Unrecognized response, retrying in 10 sec. (" + response + ")");
@@ -338,7 +338,7 @@ var ShortPixel = function() {
                 if(data.status.code == 2) { //folder is fully optimized (or empty )
                     window.location.reload();
                 }
-                else if(data.status.code == 1) {
+                else if(data.status.code == 1 & !skip) {
                     $("#doneFiles").val(parseInt($("#doneFiles").val()) + data.succeeded.length + data.failed.length + data.same.length)
                     var percent = Math.min(100.0, 100.0 * (parseInt($("#doneFiles").val())) / (parseInt($("#totalFiles").val())));
                     progressUpdate(percent.toFixed(1), "");
