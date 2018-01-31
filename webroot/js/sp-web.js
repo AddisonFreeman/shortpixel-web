@@ -311,16 +311,16 @@ var ShortPixel = function() {
                     var data = JSON.parse(response);
                     console.log(data.succeeded);
 
-                    
+
 
                     Object.entries(data.succeeded).forEach(([key,val]) => {
-                        history.push(val.OriginalURL);    
+                        history.push(val.OriginalFile);    
                     });
                     
                     console.log(history);
                 } catch (e) {
                     console.log("Unrecognized response, retrying in 10 sec. (" + response + ")");
-                    setTimeout(function(){optimize(folder, spSlice);}, 10000);
+                    setTimeout(function(){optimize(folder, spSlice, history);}, 10000);
                     return;
                 }
                 if(data.status.code < 0) { //an error occured
@@ -330,7 +330,7 @@ var ShortPixel = function() {
                         $('<div><h3 class="error" id="error-message">' + data.status.message + '</h3></div>').insertBefore("#totalFiles");
                     }
                     if(data.status.code != -403) {
-                        setTimeout(function(){optimize(folder, spSlice);}, 15000);
+                        setTimeout(function(){optimize(folder, spSlice, history);}, 15000);
                     }
                     return;
                 }
@@ -376,12 +376,12 @@ var ShortPixel = function() {
                     ShortPixel.addCronSuggestion(".progress-code-advice-empty", folder, false);
                     $(".progress-code-advice").removeClass("progress-code-advice-empty");
 
-                    setTimeout(function(){optimize(folder, spSlice);}, 1000);
+                    setTimeout(function(){optimize(folder, spSlice, history);}, 1000);
                 }
                 else if(data.status.code == 0)
                 {
                     // timeout, retry in 10 sec.
-                    setTimeout(function(){optimize(folder, spSlice);}, 10000);
+                    setTimeout(function(){optimize(folder, spSlice, history);}, 10000);
                 }
             },
             error : function(x, t, m) {
@@ -397,7 +397,7 @@ var ShortPixel = function() {
                 } else {
                     errCount += 2; //errors add up twice as fast as they decrease when success
                 }
-                setTimeout(function(){optimize(folder, spSlice);}, 10000);
+                setTimeout(function(){optimize(folder, spSlice, history);}, 10000);
             }
         });
     }
