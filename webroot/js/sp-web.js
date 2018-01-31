@@ -313,8 +313,8 @@ var ShortPixel = function() {
 
 
 
-                    Object.entries(data.succeeded).forEach(([key,val], index, array) => {
-                        if(!array.includes(val.OriginalFile))
+                    Object.entries(data.succeeded).forEach(([key,val]) => {
+                        if(!history.includes(val.OriginalFile))
                             history.push(val.OriginalFile);    
                     });
                     
