@@ -344,24 +344,13 @@ class ShortPixelWeb
         try {
             $splock->lock();               
         } catch(\Exception $e) {
-            // echo "can't lock, folder being optimized\n";
             if(extension_loaded('memcache')) {
-                // echo "memcache loaded\n";
-                // var_dump($folderPath);
                 $memcache = new \Memcache;
                 $memcache->addServer('localhost', 11211);
                 $memcacheFolder = $memcache->get('sp-q_folder');
-                // echo "wut?";
-                // var_dump($memcacheFolder);
-                
                 if($memcacheFolder == $folderPath) {
-                    // echo "memcache folder match\n";
                     $memcacheResult = $memcache->get('sp-q_result');
-                    // $memcacheResultHistory = $memcache->get('sp-q_result_history');
-                    // var_dump($memcacheResultHistory);
-                    var_dump($memcacheResult->succeeded);
                     die(json_encode($memcacheResult));
-                    
                 }
             } else {
                 // read from queue file in $folderPath
