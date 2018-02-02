@@ -150,7 +150,7 @@ class TextPersister implements Persister {
         return (object)$info;
     }
 
-    function getTodo($path, $count, $exclude = array(), $persistPath = false)
+    function getTodo($path, $count, $exclude = array(), $persistPath = false, $maxTotalFileSizeMb = ShortPixel::CLIENT_MAX_BODY_SIZE)
     {
         if(!file_exists($path) || !is_dir($path)) {
             return array();
@@ -165,8 +165,10 @@ class TextPersister implements Persister {
 
         $results = array();
         $pendingURLs = array();
-        $ignore = array_values(array_merge($exclude, array('.','..','ShortPixelBackups')));
+        $ignore = array_values(array_merge($exclude, array('.','..','.shortpixel','.sp-options','ShortPixelBackups')));
         $remain = $count;
+        $maxTotalFileSize = $maxTotalFileSizeMb * pow(1024, 2);
+        $totalFileSize = 0;
         $filesWaiting = 0;
         foreach($files as $file) {
             $filePath = $path . '/' . $file;
@@ -203,6 +205,7 @@ class TextPersister implements Persister {
                     $this->updateMeta($dataArr[$file], $fp);
                 }
             } else {
+                $toUpdate = false; //will defer updating the record only if we finally add the image (if the image is too large for this set will not add it in the end
                 if(isset($dataArr[$file])) {
                     if(    ($dataArr[$file]->status == 'success')
                         && (filesize($targetPath) !== $dataArr[$file]->optimizedSize)) {
@@ -210,38 +213,53 @@ class TextPersister implements Persister {
                         $dataArr[$file]->status = 'pending';
                         $dataArr[$file]->optimizedSize = 0;
                         $dataArr[$file]->changeDate = time();
-                        $this->updateMeta($dataArr[$file], $fp);
+                        $toUpdate = true;
                         if(time() - strtotime($dataArr[$file]->changeDate) < 1800) { //need to refresh the file processing on the server
+                            $this->updateMeta($dataArr[$file], $fp);
                             if($toClose) { $this->closeMetaFile($persistPath); }
                             return (object)array('files' => array($filePath), 'filesPending' => array(), 'refresh' => true);
                         }
                     }
                     elseif($dataArr[$file]->status == 'error') {
-                        $dataArr[$file]->retries += 1;
                         if($dataArr[$file]->retries >= ShortPixel::MAX_RETRIES) {
                             $dataArr[$file]->status = 'skip';
-                        }
-                        $this->updateMeta($dataArr[$file], $fp);
-                        if($dataArr[$file]->retries >= ShortPixel::MAX_RETRIES) {
+                            $this->updateMeta($dataArr[$file], $fp);
                             continue;
+                        } else {
+                            $dataArr[$file]->retries += 1;
+                            $toUpdate = true;
                         }
                     }
-                    elseif($dataArr[$file]->status == 'pending' && strpos($dataArr[$file]->message, str_replace("https://", "http://",\ShortPixel\Client::API_URL())) === 0) {
+
+                    elseif($dataArr[$file]->status == 'pending' && preg_match("/http[s]{0,1}:\/\/" . Client::API_DOMAIN() . "/", $dataArr[$file]->message)) {
+                    //elseif($dataArr[$file]->status == 'pending' && strpos($dataArr[$file]->message, str_replace("https://", "http://",\ShortPixel\Client::API_URL())) === 0) {
                         //the file is already uploaded and the call should  be made with the existent URL on the optimization server
                         $apiURL = $dataArr[$file]->message;
                         $pendingURLs[$apiURL] = $filePath;
                     }
                 }
                 elseif(!isset($dataArr[$file])) {
-                    $this->appendMeta($this->newMeta($targetPath), $fp);
+                    $dataArr[$file] = $this->newMeta($targetPath);
+                    $dataArr[$file]->filePos = $this->appendMeta($dataArr[$file], $fp);
                 }
 
+                if(filesize($filePath) + $totalFileSize > $maxTotalFileSize){
+                    if(filesize($filePath) > $maxTotalFileSize) { //skip this as it won't ever be selected with current settings
+                        $dataArr[$file]->status = 'skip';
+                        $dataArr[$file]->message = 'File larger than the set limit of ' . $maxTotalFileSizeMb . 'MBytes';
+                        $this->updateMeta($dataArr[$file], $fp); //this one is too big, we skipped it, just continue with next.
+                    }
+                    continue; //the total file size would exceed the limit so leave this image out for now. If it's not too large by itself, will take it in the next pass.
+                }
+                if($toUpdate) {
+                    $this->updateMeta($dataArr[$file], $fp);
+                }
                 $results[] = $filePath;
+                $totalFileSize += filesize($filePath);
                 $remain--;
 
                 if($remain <= 0) {
-                    if($toClose) { $this->closeMetaFile($persistPath); }
-                    return (object)array('files' => $results, 'filesPending' => $pendingURLs, 'refresh' => false);
+                    break;
                 }
             }
         }
@@ -254,7 +272,7 @@ class TextPersister implements Persister {
             }
         }
 */
-        return (object)array('files' => $results, 'filesPending' => $pendingURLs, 'filesWaiting' => $filesWaiting);
+        return (object)array('files' => $results, 'filesPending' => $pendingURLs, 'filesWaiting' => $filesWaiting, 'refresh' => false);
     }
 
     function getNextTodo($path, $count)
@@ -458,7 +476,7 @@ class TextPersister implements Persister {
             "percent" => 0.0 + trim(substr($line, 52, 6)),
             "optimizedSize" => 0 + trim(substr($line, 58, 9)),
             "changeDate" => strtotime(trim(substr($line, 67, 20))),
-            "file" => trim(substr($line, 87, 256)),
+            "file" => rtrim(substr($line, 87, 256)), //rtrim because there could be file names starting with a blank!! (had that)
             "message" => trim(substr($line, 343, 120)),
         );
         if(!in_array($ret->status, self::$ALLOWED_STATUSES) || !$ret->changeDate) {

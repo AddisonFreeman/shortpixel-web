@@ -6,9 +6,14 @@ namespace ShortPixel;
 class Client {
 
     private $options;
+    public static function API_DOMAIN() {
+        return "api.shortpixel.com";
+        //* DEVELOPMENT !! */ return "devapi.shortpixel.com";
+        //* DEVELOPMENT !! */ return "devapi2.shortpixel.com";
+    }
     public static function API_URL() {
-        return "https://api.shortpixel.com";
-        //return "https://devapi.shortpixel.com";
+        return "https://" . self::API_DOMAIN();
+
     }
     public static function API_ENDPOINT() {
         return self::API_URL() . "/v2/reducer.php";
@@ -162,7 +167,7 @@ class Client {
 
         //spdbgd(rawurldecode($body['urllist'][1]), "body");
 
-        for($i = 0; $i < 6; $i++) {
+        for($i = 0; $i < 6; $i++) { //curl_setopt($request, CURLOPT_TIMEOUT, 120);curl_setopt($request, CURLOPT_VERBOSE, true);
             $response = curl_exec($request);
             if(!curl_errno($request)) {
                 break;
@@ -331,6 +336,7 @@ class Client {
             CURLOPT_POST       => true,
             CURLOPT_BINARYTRANSFER => true,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 300, //to be able to handle via post large files up to 48M which might take a long time to upload.
             CURLOPT_POSTFIELDS => implode("\r\n", $body),
             CURLOPT_HTTPHEADER => array_merge(array(
                 "Expect: 100-continue",

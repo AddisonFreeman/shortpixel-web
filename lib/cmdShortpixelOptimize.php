@@ -39,11 +39,18 @@ if($webPath === false && isset($options["webPath"])) {
 $bkFolder = $bkFolderRel = false;
 if($bkBase) {
     if(is_dir($bkBase)) {
-        $bkFolder = $bkBase . '/' . (strpos(trailingslashit($bkBase), trailingslashit($folder)) === 0 ? 'ShortPixelBackups' : basename($folder));
+        $bkBase = trailingslashit($bkBase);
+        $bkFolder = $bkBase . (strpos($bkBase, trailingslashit($folder)) === 0 ? 'ShortPixelBackups' : basename($folder) . (strpos($bkBase, trailingslashit(dirname($folder))) === 0 ? "_SP_BKP" : "" ));
         $bkFolderRel = \ShortPixel\Settings::pathToRelative($bkFolder, $targetFolder);
     } else {
         die(\ShortPixel\ShortPixel::splog("Backup path does not exist ($bkFolder)")."\n");
     }
+}
+
+//handle the ctrl+C
+if (function_exists('pcntl_signal')) {
+    declare(ticks=1); // PHP internal, make signal handling work
+    pcntl_signal(SIGINT, 'spCmdSignalHandler');
 }
 
 //sanity checks
@@ -127,6 +134,8 @@ try {
                     break;
                 } else {
                     echo(\ShortPixel\ShortPixel::splog("ClientException: " . $ex->getMessage() . " (CODE: " . $ex->getCode() . ")"));
+                    $tries++;
+                    continue;
                 }
                 $splock->unlock();
             }
@@ -136,7 +145,6 @@ try {
             if (count($result->succeeded) > 0) {
                 $crtImageCount += count($result->succeeded);
                 $imageCount += $crtImageCount;
-                $total = $info->total;
             } elseif (count($result->failed)) {
                 $crtImageCount += count($result->failed);
                 $failedImageCount += count($result->failed);
@@ -146,24 +154,24 @@ try {
             } elseif (count($result->pending)) {
                 $crtImageCount += count($result->pending);
             }
-            
             if ($verbose) {
                 echo("PASS $tries : " . count($result->succeeded) . " succeeded, " . count($result->pending) . " pending, " . count($result->same) . " don't need optimization, " . count($result->failed) . " failed\n");
                 foreach ($result->succeeded as $item) {
-                    echo(" - " . $item->SavedFile . " " . $item->Status->Message . "\n");
+                    echo(" - " . $item->SavedFile . " " . $item->Status->Message . " ("
+                        . ($item->PercentImprovement > 0 ? "Reduced by " . $item->PercentImprovement . "%" : "") . ($item->PercentImprovement < 5 ? " - Bonus processing" : ""). ")\n");
                 }
                 foreach ($result->pending as $item) {
                     echo(" - " . $item->SavedFile . " " . $item->Status->Message . "\n");
                 }
                 foreach ($result->same as $item) {
-                    echo(" - " . $item->SavedFile . " " . $item->Status->Message . "\n");
+                    echo(" - " . $item->SavedFile . " " . $item->Status->Message . " (Bonus processing)\n");
                 }
                 foreach ($result->failed as $item) {
                     echo(" - " . $item->SavedFile . " " . $item->Status->Message . "\n");
                 }
                 echo("\n");
             } else {
-                // echo(str_pad("", $crtImageCount, "#"));
+                echo(str_pad("", $crtImageCount, "#"));
             }
             //if no files were processed in this pass, the folder is done
             if ($crtImageCount == 0) {
@@ -219,4 +227,11 @@ function verifyFolder($folder, $create = false)
 
 function trailingslashit($path) {
     return rtrim($path, '/') . '/';
+}
+
+function spCmdSignalHandler($signo)
+{
+    global $splock;
+    $splock->unlock();
+    die(splog("Caught interrupt signal, exiting.") . "\n");
 }
