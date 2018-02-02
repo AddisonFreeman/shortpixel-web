@@ -344,11 +344,11 @@ class ShortPixelWeb
                 $memcacheFolder = $memcache->get('sp-q_folder');
                 if($memcacheFolder == $folderPath) {
                     $memcacheResult = $memcache->get('sp-q_result');
-                    $memcacheHistory = $memcache->get('sp-q_history');
-                    if(is_null($memcachedHistory) || empty($memcachedHistory)) {
+                    // $memcacheHistory = $memcache->get('sp-q_history');
+                    // if(is_null($memcacheHistory) || empty($memcacheHistory)) {
 
-                        // $memcacheResult = ['hello' => 'test'];    
-                    }
+                    //     // $memcacheResult = ['hello' => 'test'];    
+                    // }
                     
                     var_dump($memcacheResult);
 
