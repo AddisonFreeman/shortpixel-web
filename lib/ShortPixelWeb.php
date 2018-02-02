@@ -55,8 +55,7 @@ class ShortPixelWeb
                 case 'shortpixel_optimize':
                     $processId = uniqid();
                     $splock = new \ShortPixel\Lock($processId, $_POST['folder']);    
-                    $resultHistory = [];
-                    $this->optimizeAction($splock, $resultHistory, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
+                    $this->optimizeAction($splock, $_POST['folder'], isset($_POST['slice']) ? $_POST['slice'] : 0);
             }
         }
         elseif(isset($_GET['folder'])) {
@@ -130,11 +129,6 @@ class ShortPixelWeb
     }
 
     function renderBrowseFolderFragment($splock, $folder, $multiSelect, $onlyFolders, $onlyFiles, $extended = false) {
-        try{
-            $splock->unlock();
-        } catch (\Exception $e) {
-            echo "can't unlock() folder";
-        }
         $postDir = $this->folderFullPath($folder);
         $checkbox = $multiSelect ? "<input type='checkbox' />" : null;
 
@@ -329,7 +323,7 @@ class ShortPixelWeb
         $this->xtpl->out('main');
     }
 
-    function optimizeAction($splock, $resultHistory, $folder, $slice) {        
+    function optimizeAction($splock, $folder, $slice) {        
         $timeLimit = ini_get('max_execution_time');
         if($timeLimit) {
             $timeLimit -= 5;
@@ -360,22 +354,22 @@ class ShortPixelWeb
             }    
         }
 
-        // try {
-        //     $exclude = array();
-        //     if(\ShortPixel\opt('exclude')) {
-        //         $exclude = explode(',',\ShortPixel\opt('exclude'));
-        //     }
-        //     if(\ShortPixel\opt('base_url')) {
-        //         $cmd = \ShortPixel\fromWebFolder($folderPath, \ShortPixel\opt('base_url'), $exclude);
-        //     } else {
-        //         $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
-        //     }
-        //     $splock->unlock();
-        //     die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
-        // } catch(\Exception $e) {
-        //     $splock->unlock();
-        //     die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
-        // }
+        try {
+            $exclude = array();
+            if(\ShortPixel\opt('exclude')) {
+                $exclude = explode(',',\ShortPixel\opt('exclude'));
+            }
+            if(\ShortPixel\opt('base_url')) {
+                $cmd = \ShortPixel\fromWebFolder($folderPath, \ShortPixel\opt('base_url'), $exclude);
+            } else {
+                $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
+            }
+            $splock->unlock();
+            die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
+        } catch(\Exception $e) {
+            $splock->unlock();
+            die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
+        }
     }
 
     function displayMessages($xtplPath, $messages) {
