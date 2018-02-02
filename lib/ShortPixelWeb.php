@@ -350,7 +350,7 @@ class ShortPixelWeb
                         // $memcacheResult = ['hello' => 'test'];    
                     }
                     
-                    var_dump($memcacheResult->$succeeded);
+                    var_dump($memcacheResult['succeeded']);
 
                     // die(json_encode($memcacheResult));
                 }
