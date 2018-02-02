@@ -351,7 +351,9 @@ class ShortPixelWeb
                     // }
                     
                     // var_dump($memcacheResult);
-                    var_dump($memcacheResult->succeeded[0]->OriginalURL);
+                    foreach($memcacheResult->succeeded as $item) {
+                        var_dump($item->OriginalURL);
+                    }  
 
                     // die(json_encode($memcacheResult));
                 }
