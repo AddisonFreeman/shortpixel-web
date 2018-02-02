@@ -346,7 +346,7 @@ class ShortPixelWeb
                     $memcacheResult = $memcache->get('sp-q_result');
                     $memcacheHistory = $memcache->get('sp-q_history');
                     if(is_null($memcacheHistory)) {
-                        $memcacheResult = [];    
+                        $memcacheHistory = [];    
                     }
                     $send = true;
                     foreach($memcacheResult->succeeded as $item) {
