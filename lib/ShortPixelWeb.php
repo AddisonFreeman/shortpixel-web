@@ -362,22 +362,22 @@ class ShortPixelWeb
             }    
         }
 
-        try {
-            $exclude = array();
-            if(\ShortPixel\opt('exclude')) {
-                $exclude = explode(',',\ShortPixel\opt('exclude'));
-            }
-            if(\ShortPixel\opt('base_url')) {
-                $cmd = \ShortPixel\fromWebFolder($folderPath, \ShortPixel\opt('base_url'), $exclude);
-            } else {
-                $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
-            }
-            $splock->unlock();
-            die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
-        } catch(\Exception $e) {
-            $splock->unlock();
-            die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
-        }
+        // try {
+        //     $exclude = array();
+        //     if(\ShortPixel\opt('exclude')) {
+        //         $exclude = explode(',',\ShortPixel\opt('exclude'));
+        //     }
+        //     if(\ShortPixel\opt('base_url')) {
+        //         $cmd = \ShortPixel\fromWebFolder($folderPath, \ShortPixel\opt('base_url'), $exclude);
+        //     } else {
+        //         $cmd = \ShortPixel\fromFolder($folderPath, $slice, $exclude);
+        //     }
+        //     $splock->unlock();
+        //     die(json_encode($cmd->wait($timeLimit)->toFiles($folderPath)));
+        // } catch(\Exception $e) {
+        //     $splock->unlock();
+        //     die(json_encode(array("status" => array("code" => $e->getCode(), "message" => $e->getMessage()))));
+        // }
     }
 
     function displayMessages($xtplPath, $messages) {
