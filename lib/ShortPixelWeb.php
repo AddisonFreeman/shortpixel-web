@@ -343,30 +343,54 @@ class ShortPixelWeb
                 $memcache->addServer('localhost', 11211);
                 $memcacheFolder = $memcache->get('sp-q_folder');
                 if($memcacheFolder == $folderPath) {
-                    $memcacheResult = $memcache->get('sp-q_result');
-                    $memcacheHistory = $memcache->get('sp-q_history');
-                    $memcache->set('testflag','qqqq');
-                    $testFlag = $memcache->get('testflag');
-                    var_dump($testFlag);
+                    $memcacheResult = $memcache->get('sp-q_result');                 
+                    $reqHistory = $memcache->get('sp-q_reqHistory');  
+                    $timestamp = $memcache->get('sp-q_time');          
+                    $date = new DateTime();
+                    $now = $date->getTimestamp();
+                    $memQueue->mem->set('sp-q_time',$date->getTimestamp());          
 
-                    $send = true;
-                    // if memcached not null
+                    if(is_null($reqHistory)) {
+                        $reqHistory = []; 
+                        $memcache->set('sp-q_reqHistory', $reqHistory);     
+                    }
+
+                    var_dump($timestamp);
+                    var_dump($now);
+                    
+                    $skip = false;
+
                     foreach($memcacheResult->succeeded as $item) {
-                        if(in_array($item->OriginalURL, $memcacheHistory)) {
-                            $send = false; //don't return response, duplicate
+                        if(in_array($item->OriginalURL, $reqHistory) || ) { //if first time to see this and is recent
+                            if(sizeof($reqHistory) > 50 ) {
+                                // array_pop($memcacheHistory);//remove from history
+                            }
                             break;
-                        } else {
-                            // array_push($memcacheHistory, $item->OriginalURL);    
+                        } else { //if url not in req history
+                            array_push($reqHistory, $item->OriginalURL);  
+                            $skip = true;
                         }
-                    //     // var_dump($item->OriginalURL);
                     }  
-                    // $memcacheHistory = $memcache->set('sp-q_history', $memcacheHistory);
+                    $memcache->set('sp-q_reqHistory', $reqHistory);     
 
-                    if($send) {
+                    if(!$skip) {
                         die(json_encode($memcacheResult));    
                     } else {
                         die();
                     }
+
+                    
+
+                    
+                    // foreach($memcacheResult->succeeded as $item) { //remove items from history, still return response
+                    //     if(in_array($item->OriginalURL, $memcacheHistory)) {
+                    //         $newHistory = array_diff($memcacheHistory,[$item->OriginalURL])
+                    //         $memcache->set('sp-q_reqHistory', $newHistory);        
+                    //     } else {
+                    //         die();
+                    //     }
+                    // }  
+                    
                 }
             } else {
                 // read from queue file in $folderPath
