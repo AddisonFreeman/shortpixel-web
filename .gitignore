@@ -1,3 +1,4 @@
-.idea
 vendor
-shortpixel.ini
+.idea
+composer.lock
+lib/splog.txt
