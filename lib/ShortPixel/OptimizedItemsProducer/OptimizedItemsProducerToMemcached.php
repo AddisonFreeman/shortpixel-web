@@ -12,7 +12,7 @@ class OptimizedItemsProducerToMemcached extends \ShortPixel\OptimizedItemsProduc
 		$result = $this->get_result();
 		$total = $this->get_total();
 		$remaining = $total - $result;
-		$memcache->set('remaining', $remaining);
+		// $memcache->set('remaining', $remaining);
 		$this->mem = $memcache;
 	}
 }

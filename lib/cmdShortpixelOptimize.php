@@ -128,6 +128,8 @@ try {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                 }
+
+            } catch (\ShortPixel\ClientException $ex) {
                 $memQueue->mem->set('sp-q_result',$result);
                 array_push($memcacheHistory, "item/pathURL/asd.jpg");    
                 // foreach($result->succeeded as $item) {
@@ -138,8 +140,10 @@ try {
                 //     }
                 // }  
                 $memcacheHistory = $memcache->set('sp-q_history', $memcacheHistory);
-                // $fileQueue->printToFile($folder, $result);    
-            } catch (\ShortPixel\ClientException $ex) {
+                // $fileQueue->printToFile($folder, $result);
+
+
+                
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
                     break;
                 } else {
