@@ -139,11 +139,11 @@ try {
                 //         array_push($memcacheHistory, $item->OriginalURL);    
                 //     }
                 // }  
-                $memcacheHistory = $memcache->set('sp-q_history', $memcacheHistory);
+                $memcacheHistory = $memcache->set('sp-q_history', array('test' => 1, 'url' => 'asdf/asf/asdf.jpg'));
                 // $fileQueue->printToFile($folder, $result);
 
 
-                
+
                 if ($ex->getCode() == \ShortPixel\ClientException::NO_FILE_FOUND) {
                     break;
                 } else {
