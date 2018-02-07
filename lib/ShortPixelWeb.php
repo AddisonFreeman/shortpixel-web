@@ -362,6 +362,8 @@ class ShortPixelWeb
 
                     if($send) {
                         die(json_encode($memcacheResult));    
+                    } else {
+                        die();
                     }
                 }
             } else {
