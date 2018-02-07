@@ -346,7 +346,8 @@ class ShortPixelWeb
                     $memcacheResult = $memcache->get('sp-q_result');
                     $memcacheHistory = $memcache->get('sp-q_history');
                     $memcache->set('testflag','qqqq');
-                    // var_dump($memcacheHistory);
+                    $testFlag = $memcache->get('testflag');
+                    var_dump($testFlag);
 
                     $send = true;
                     // if memcached not null
