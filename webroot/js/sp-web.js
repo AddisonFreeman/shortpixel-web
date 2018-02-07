@@ -312,14 +312,14 @@ var ShortPixel = function() {
                     var data = JSON.parse(response);
                     console.log(data.succeeded);
 
-                    Object.entries(data.succeeded).forEach(([key,val]) => {
-                        if(!history.includes(val.OriginalFile)) {
-                            history.push(val.OriginalFile);    
-                        } else {
-                            skip = true;
-                        }
-                    });
-                    console.log(history);
+                    // Object.entries(data.succeeded).forEach(([key,val]) => {
+                    //     if(!history.includes(val.OriginalFile)) {
+                    //         history.push(val.OriginalFile);    
+                    //     } else {
+                    //         skip = true;
+                    //     }
+                    // });
+                    // console.log(history);
                 } catch (e) {
                     console.log("Unrecognized response, retrying in 10 sec. (" + response + ")");
                     setTimeout(function(){optimize(folder, spSlice, history);}, 10000);
