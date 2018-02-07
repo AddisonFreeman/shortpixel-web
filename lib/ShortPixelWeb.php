@@ -344,20 +344,20 @@ class ShortPixelWeb
                 $memcacheFolder = $memcache->get('sp-q_folder');
                 if($memcacheFolder == $folderPath) {
                     $memcacheResult = $memcache->get('sp-q_result');                 
-                    $reqHistory = $memcache->get('sp-q_reqHistory');  
+                    // $reqHistory = $memcache->get('sp-q_reqHistory');  
                     $timestamp = $memcache->get('sp-q_time');          
                     $date = new \DateTime();
                     $now = $date->getTimestamp();
                     // $memcache->set('sp-q_time',$date->getTimestamp());          
 
-                    if(is_null($reqHistory)) {
+                    // if(is_null($reqHistory)) {
                         $reqHistory = []; 
-                        $memcache->set('sp-q_reqHistory', $reqHistory);     
-                    }
+                    //     $memcache->set('sp-q_reqHistory', $reqHistory);     
+                    // }
 
                     // var_dump($timestamp);
                     // var_dump($now);
-                    var_dump($reqHistory);
+
                     $skip = false;
 
                     foreach($memcacheResult->succeeded as $item) {
@@ -372,7 +372,7 @@ class ShortPixelWeb
                         }
                     }  
                     $memcache->set('sp-q_reqHistory', $reqHistory);     
-
+                    var_dump($reqHistory);
                     if(!$skip) {
                         die(json_encode($memcacheResult));    
                     } else {
