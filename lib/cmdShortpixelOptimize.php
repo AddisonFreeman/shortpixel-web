@@ -128,10 +128,10 @@ try {
                     $speed = ($speed ? $speed : \ShortPixel\ShortPixel::MAX_ALLOWED_FILES_PER_CALL);
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                 }
-
+                $memcache->mem->set('sp-q_history', 3);
             } catch (\ShortPixel\ClientException $ex) {
                 $memcache->mem->set('sp-q_history', 4);
-                $memQueue->mem->set('sp-q_result',$result);
+                // $memQueue->mem->set('sp-q_result',$result);
                 // array_push($memcacheHistory, "item/pathURL/asd.jpg");    
                 // foreach($result->succeeded as $item) {
                 //     if(in_array($item->OriginalURL, $memcacheHistory)) {
@@ -154,6 +154,7 @@ try {
                 }
                 $splock->unlock();
             }
+            $memcache->mem->set('sp-q_history', 5);
             $tries++;
 
             $crtImageCount = 0;
