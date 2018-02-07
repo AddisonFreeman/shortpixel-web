@@ -346,7 +346,7 @@ class ShortPixelWeb
                     $memcacheResult = $memcache->get('sp-q_result');                 
                     $reqHistory = $memcache->get('sp-q_reqHistory');  
                     $timestamp = $memcache->get('sp-q_time');          
-                    $date = new DateTime();
+                    $date = new \DateTime();
                     $now = $date->getTimestamp();
                     $memQueue->mem->set('sp-q_time',$date->getTimestamp());          
 
