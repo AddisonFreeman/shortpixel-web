@@ -345,6 +345,7 @@ class ShortPixelWeb
                 if($memcacheFolder == $folderPath) {
                     $memcacheResult = $memcache->get('sp-q_result');
                     $memcacheHistory = $memcache->get('sp-q_history');
+                    $memcache->set('testflag','qqqq');
                     // var_dump($memcacheHistory);
 
                     $send = true;
