@@ -345,9 +345,10 @@ class ShortPixelWeb
                 if($memcacheFolder == $folderPath) {
                     $memcacheResult = $memcache->get('sp-q_result');
                     $memcacheHistory = $memcache->get('sp-q_history');
-                    var_dump($memcacheHistory);
+                    // var_dump($memcacheHistory);
 
                     $send = true;
+                    // if memcached not null
                     foreach($memcacheResult->succeeded as $item) {
                         if(in_array($item->OriginalURL, $memcacheHistory)) {
                             $send = false; //don't return response, duplicate
