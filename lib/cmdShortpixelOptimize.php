@@ -129,13 +129,14 @@ try {
                     $result = \ShortPixel\fromFolder($folder, $speed, array(), $targetFolderParam)->wait(300)->toFiles($targetFolder);
                 }
                 $memQueue->mem->set('sp-q_result',$result);
-                foreach($result->succeeded as $item) {
-                    if(in_array($item->OriginalURL, $memcacheHistory)) {
-                        break;
-                    } else {
-                        array_push($memcacheHistory, $item->OriginalURL);    
-                    }
-                }  
+                array_push($memcacheHistory, "item/pathURL/asd.jpg");    
+                // foreach($result->succeeded as $item) {
+                //     if(in_array($item->OriginalURL, $memcacheHistory)) {
+                //         break;
+                //     } else {
+                //         array_push($memcacheHistory, $item->OriginalURL);    
+                //     }
+                // }  
                 $memcacheHistory = $memcache->set('sp-q_history', $memcacheHistory);
                 // $fileQueue->printToFile($folder, $result);    
             } catch (\ShortPixel\ClientException $ex) {
@@ -192,8 +193,8 @@ try {
             //check & refresh the lock file
             $splock->lock();
         }
-        $memQueue->mem->set('sp-q_folder', FALSE);
-        $memQueue->mem->set('sp-q_result',FALSE);
+        // $memQueue->mem->set('sp-q_folder', FALSE);
+        // $memQueue->mem->set('sp-q_result',FALSE);
 
         echo(\ShortPixel\ShortPixel::splog("This pass: $imageCount images optimized, $sameImageCount don't need optimization, $failedImageCount failed to optimize." . ($folderOptimized ? " Congratulations, the folder is optimized.":"")));
         if ($crtImageCount > 0) echo(\ShortPixel\ShortPixel::splog("Images still pending, please relaunch the script to continue."));
