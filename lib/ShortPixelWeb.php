@@ -362,7 +362,7 @@ class ShortPixelWeb
 
                     foreach($memcacheResult->succeeded as $item) {
                         if(in_array($item->OriginalURL, $reqHistory)) { //if first time to see this and is recent
-                            $reqHistory = array_diff($reqHistory,[$item->OriginalURL]) //remove item from array
+                            $reqHistory = array_diff($reqHistory,[$item->OriginalURL]); //remove item from array
                             // if(sizeof($reqHistory) > 50 ) {
                             //     // array_pop($memcacheHistory);//remove from history
                             // }
