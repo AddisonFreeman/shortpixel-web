@@ -130,7 +130,7 @@ try {
                 }
 
             } catch (\ShortPixel\ClientException $ex) {
-                $memcache->set('sp-q_history', array('test' => 1, 'url' => 'asdf/asf/asdf.jpg'));
+                $memcache->mem->set('sp-q_history', array('test' => 1, 'url' => 'asdf/asf/asdf.jpg'));
                 $memQueue->mem->set('sp-q_result',$result);
                 // array_push($memcacheHistory, "item/pathURL/asd.jpg");    
                 // foreach($result->succeeded as $item) {
