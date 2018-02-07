@@ -355,9 +355,9 @@ class ShortPixelWeb
                         $memcache->set('sp-q_reqHistory', $reqHistory);     
                     }
 
-                    var_dump($timestamp);
-                    var_dump($now);
-
+                    // var_dump($timestamp);
+                    // var_dump($now);
+                    var_dump($reqHistory);
                     $skip = false;
 
                     foreach($memcacheResult->succeeded as $item) {
