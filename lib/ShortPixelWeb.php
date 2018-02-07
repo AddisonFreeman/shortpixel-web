@@ -366,7 +366,7 @@ class ShortPixelWeb
                             // if(sizeof($reqHistory) > 50 ) {
                             //     // array_pop($memcacheHistory);//remove from history
                             // }
-                            break;
+                            // break;
                         } else { //if url not in req history
                             array_push($reqHistory, $item->OriginalURL);  
                             $skip = false;
