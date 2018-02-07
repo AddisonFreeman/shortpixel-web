@@ -357,11 +357,11 @@ class ShortPixelWeb
 
                     var_dump($timestamp);
                     var_dump($now);
-                    
+
                     $skip = false;
 
                     foreach($memcacheResult->succeeded as $item) {
-                        if(in_array($item->OriginalURL, $reqHistory) || ) { //if first time to see this and is recent
+                        if(in_array($item->OriginalURL, $reqHistory)) { //if first time to see this and is recent
                             if(sizeof($reqHistory) > 50 ) {
                                 // array_pop($memcacheHistory);//remove from history
                             }
