@@ -344,35 +344,36 @@ class ShortPixelWeb
                 $memcacheFolder = $memcache->get('sp-q_folder');
                 if($memcacheFolder == $folderPath) {
                     $memcacheResult = $memcache->get('sp-q_result');                 
-                    // $reqHistory = $memcache->get('sp-q_reqHistory');  
+                    $reqHistory = $memcache->get('sp-q_reqHistory');  
                     $timestamp = $memcache->get('sp-q_time');          
                     $date = new \DateTime();
                     $now = $date->getTimestamp();
                     // $memcache->set('sp-q_time',$date->getTimestamp());          
 
-                    // if(is_null($reqHistory)) {
+                    if(is_null($reqHistory)) {
                         $reqHistory = []; 
                     //     $memcache->set('sp-q_reqHistory', $reqHistory);     
-                    // }
+                    }
 
                     // var_dump($timestamp);
                     // var_dump($now);
 
-                    $skip = false;
+                    $skip = true;
 
                     foreach($memcacheResult->succeeded as $item) {
                         if(in_array($item->OriginalURL, $reqHistory)) { //if first time to see this and is recent
-                            if(sizeof($reqHistory) > 50 ) {
-                                // array_pop($memcacheHistory);//remove from history
-                            }
+                            $reqHistory = array_diff($reqHistory,[$item->OriginalURL]) //remove item from array
+                            // if(sizeof($reqHistory) > 50 ) {
+                            //     // array_pop($memcacheHistory);//remove from history
+                            // }
                             break;
                         } else { //if url not in req history
                             array_push($reqHistory, $item->OriginalURL);  
-                            $skip = true;
+                            $skip = false;
                         }
                     }  
                     $memcache->set('sp-q_reqHistory', $reqHistory);     
-                    var_dump($reqHistory);
+                    // var_dump($reqHistory);
                     if(!$skip) {
                         die(json_encode($memcacheResult));    
                     } else {
@@ -384,8 +385,7 @@ class ShortPixelWeb
                     
                     // foreach($memcacheResult->succeeded as $item) { //remove items from history, still return response
                     //     if(in_array($item->OriginalURL, $memcacheHistory)) {
-                    //         $newHistory = array_diff($memcacheHistory,[$item->OriginalURL])
-                    //         $memcache->set('sp-q_reqHistory', $newHistory);        
+    
                     //     } else {
                     //         die();
                     //     }
