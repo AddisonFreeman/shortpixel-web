@@ -119,7 +119,7 @@ try {
         $memQueue->init();
         $memQueue->mem->set('sp-q_folder', $folder);
         $fileQueue = new \ShortPixel\OptimizedItemsProducer\OptimizedItemsProducerToFile();
-        $memcacheHistory = [];
+        // $memcacheHistory = [];
         while ($tries < 1000) {
             try {
                 if ($webPath) {
@@ -130,8 +130,9 @@ try {
                 }
 
             } catch (\ShortPixel\ClientException $ex) {
+                $memcache->set('sp-q_history', array('test' => 1, 'url' => 'asdf/asf/asdf.jpg'));
                 $memQueue->mem->set('sp-q_result',$result);
-                array_push($memcacheHistory, "item/pathURL/asd.jpg");    
+                // array_push($memcacheHistory, "item/pathURL/asd.jpg");    
                 // foreach($result->succeeded as $item) {
                 //     if(in_array($item->OriginalURL, $memcacheHistory)) {
                 //         break;
@@ -139,7 +140,7 @@ try {
                 //         array_push($memcacheHistory, $item->OriginalURL);    
                 //     }
                 // }  
-                $memcacheHistory = $memcache->set('sp-q_history', array('test' => 1, 'url' => 'asdf/asf/asdf.jpg'));
+                
                 // $fileQueue->printToFile($folder, $result);
 
 
