@@ -351,6 +351,7 @@ class ShortPixelWeb
                     // $memcache->set('sp-q_time',$date->getTimestamp());          
 
                     if(is_null($reqHistory)) {
+                        echo 'reqHistory is null';
                         $reqHistory = []; 
                     //     $memcache->set('sp-q_reqHistory', $reqHistory);     
                     }
@@ -368,7 +369,7 @@ class ShortPixelWeb
                             // }
                             // break;
                         } else { //if url not in req history
-                            array_push($reqHistory, $item->OriginalURL);  
+                            array_push($reqHistory, $item->OriginalURL);  //push timestamp too
                             $skip = false;
                         }
                     }  
