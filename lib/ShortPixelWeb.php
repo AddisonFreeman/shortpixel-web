@@ -344,20 +344,11 @@ class ShortPixelWeb
                 $memcacheFolder = $memcache->get('sp-q_folder');
                 if($memcacheFolder == $folderPath) {
                     $memcacheResult = $memcache->get('sp-q_result');                 
-                    $reqHistory = $memcache->get('sp-q_reqHistory');  
+                    $reqHistory = !is_null($memcache->get('sp-q_reqHistory')) ? $memcache->get('sp-q_reqHistory') : [];
                     $timestamp = $memcache->get('sp-q_time');          
                     $date = new \DateTime();
                     $now = $date->getTimestamp();
                     // $memcache->set('sp-q_time',$date->getTimestamp());          
-
-                    if(is_null($reqHistory)) {
-                        echo 'reqHistory is null';
-                        $reqHistory = []; 
-                    //     $memcache->set('sp-q_reqHistory', $reqHistory);     
-                    }
-
-                    // var_dump($timestamp);
-                    // var_dump($now);
 
                     $skip = true;
 
